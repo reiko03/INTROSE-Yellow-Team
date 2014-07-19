@@ -14,7 +14,7 @@ public interface ItemInterface {
     //methods for sql interaction goes here (AddItem, DeleteItem, etc)
     public void addItem(ItemBean bean);
 
-    public void editItem(ItemBean bean);
+    public void editItem(String itemName, String obj, String columnIndex);
 
-    public void deleteItem(int id);
+    public void deleteItem(String name);
 }

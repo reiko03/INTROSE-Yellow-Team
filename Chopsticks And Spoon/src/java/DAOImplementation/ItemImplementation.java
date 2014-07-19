@@ -41,13 +41,62 @@ public class ItemImplementation implements DAOInterface.ItemInterface{
     }
 
     @Override
-    public void editItem(ItemBean bean) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public void editItem(String itemName, String obj, String columnIndex) {
+        try{
+        Connector c = new Connector();
+        Connection connection = c.getConnection();
+        String query;
+        Integer ci;
+       
+            ci = Integer.parseInt(columnIndex);
+        
+        PreparedStatement ps;
+        switch(ci){
+            case 0: query = "UPDATE item SET itemName = ? where itemName = ?";
+                    
+                   ps = connection.prepareStatement(query);
+                    ps.setString(1, obj);
+                    ps.setString(2, itemName);
+                    
+                    ps.executeUpdate(); //add, update, delete   
+            break;
+            case 1: query = "UPDATE item SET itemWeight = ? where itemName = ?";
+                    ps = connection.prepareStatement(query);
+                     ps.setFloat(1, Float.parseFloat(obj));
+                     System.out.println(Float.parseFloat(obj) + " to " + itemName);
+                     ps.setString(2, itemName);
+                    ps.executeUpdate(); //add, update, delete   
+                     
+            break;
+            case 2: query = "UPDATE item SET itemQuantity = ? where itemName = ?";
+                    ps = connection.prepareStatement(query);
+                     ps.setInt(1, Integer.parseInt(obj));
+                      System.out.println(Integer.parseInt(obj) + " to " + itemName);
+                     ps.setString(2, itemName);
+                     ps.executeUpdate(); //add, update, delete   
+                    
+            break;
+        }
+        
+              
+        
+        }catch(SQLException exc){
+        
+        }
     }
 
     @Override
-    public void deleteItem(int id) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public void deleteItem(String name) {
+      Connector c = new Connector();
+        Connection connection = c.getConnection();
+        String query = "DELETE FROM item WHERE itemName = ?";
+        try{
+        PreparedStatement ps = connection.prepareStatement(query);
+        ps.setString(1, name);
+         ps.executeUpdate();}
+        catch(SQLException exc){
+        }
+        
     }
     
     public static List<ItemBean> viewAllItems() throws Exception{
@@ -68,6 +117,9 @@ public class ItemImplementation implements DAOInterface.ItemInterface{
         return list;
     }
     
+ 
+    
+   
     
 
         
