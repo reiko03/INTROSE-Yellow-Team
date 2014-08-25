@@ -11,20 +11,18 @@ import DAOImplementation.UserImplementation;
 import DAOInterface.UsersInterface;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.ArrayList;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 
 /**
  *
- * @author Keiko Nagano
+ * @author JasonTan
  */
-@WebServlet(name = "LoginServlet", urlPatterns = {"/LoginServlet"})
-public class LoginServlet extends HttpServlet {
+@WebServlet(name = "EditUserServlet", urlPatterns = {"/EditUserServlet"})
+public class EditUserServlet extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -41,14 +39,18 @@ public class LoginServlet extends HttpServlet {
         PrintWriter out = response.getWriter();
         try {
             /* TODO output your page here. You may use following sample code. */
-           UsersInterface account = new UserImplementation();
-          
-           if(account.userLogin(request.getParameter("username"), request.getParameter("password")))
-                response.sendRedirect("dishes.jsp");
-           else{
-               out.println("<script>alert('Login fail.')</script>");
-               out.println("<script>window.location='index.jsp'</script>");
-           }
+           UsersBean userBean = new UsersBean();
+           UsersInterface userDAO = new UserImplementation();
+           String user = request.getParameter("newUsername");
+           String pass = request.getParameter("newPassword");
+           String pos = request.getParameter("newPosition");
+           userBean.setUser_name(user);
+           userBean.setUser_password(pass);
+           userBean.setUser_level(pos);
+           String username = request.getParameter("username");
+           if(userDAO.editUser(userBean, userDAO.getUser(username).getUser_id())) 
+             response.sendRedirect("users.jsp");
+           
         } finally {
             out.close();
         }

@@ -17,7 +17,7 @@ import java.util.logging.Logger;
 public class Connector {
 
     private String username = "root"; //username
-    private String password = "p@ssword"; //password
+    private String password = "1234"; //password
     private String host = "localhost";
     private String port = "3306";
     private String url = "jdbc:mysql://localhost:3306/cns3";

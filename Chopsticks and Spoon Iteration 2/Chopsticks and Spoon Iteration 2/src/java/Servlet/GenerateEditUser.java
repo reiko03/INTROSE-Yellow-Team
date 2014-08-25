@@ -11,20 +11,22 @@ import DAOImplementation.UserImplementation;
 import DAOInterface.UsersInterface;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 /**
  *
- * @author Keiko Nagano
+ * @author JasonTan
  */
-@WebServlet(name = "LoginServlet", urlPatterns = {"/LoginServlet"})
-public class LoginServlet extends HttpServlet {
+@WebServlet(name = "GenerateEditUser", urlPatterns = {"/GenerateEditUser"})
+public class GenerateEditUser extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -41,14 +43,23 @@ public class LoginServlet extends HttpServlet {
         PrintWriter out = response.getWriter();
         try {
             /* TODO output your page here. You may use following sample code. */
-           UsersInterface account = new UserImplementation();
+            JSONObject obj = new JSONObject();
+             String username = request.getParameter("editUsername");
+            UsersInterface userDAO = new UserImplementation();
+            UsersBean userBean = userDAO.getUser(username);
+             try {
+                  obj.put("Username", userBean.getUser_name());
+                   obj.put("Password", userBean.getUser_password());
+                     obj.put("Position", userBean.getUser_level());
+            
+            
           
-           if(account.userLogin(request.getParameter("username"), request.getParameter("password")))
-                response.sendRedirect("dishes.jsp");
-           else{
-               out.println("<script>alert('Login fail.')</script>");
-               out.println("<script>window.location='index.jsp'</script>");
-           }
+              } catch (JSONException ex) {
+                  Logger.getLogger(GenerateEditUser.class.getName()).log(Level.SEVERE, null, ex);
+              }
+               
+            out.print(obj);
+            out.flush();
         } finally {
             out.close();
         }

@@ -1,3 +1,5 @@
+<%@page import="Bean.UsersBean"%>
+<%@page import="DAOImplementation.UserImplementation"%>
 <!DOCTYPE html>
 <!--[if lt IE 7 ]><html class="ie ie6" lang="en"> <![endif]-->
 <!--[if IE 7 ]><html class="ie ie7" lang="en"> <![endif]-->
@@ -11,6 +13,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"> 
   <link rel="stylesheet" href="css/style.css">
   <link rel="icon" href="images/favicon.ico">
+  <script src="bootstrap/js/jquery-2.1.1.js"></script>
 </head>
 <body id="body_users">
   <div class="wrap">
@@ -39,7 +42,7 @@
       <div class="subMenu">
 	    <ul>
 	      <li><a href="dishes.html" title="Manage Dishes">Dishes <span>1</span></a></li>
-		  <li><a href="users.html" title="Manage Users">Users</a></li>
+		  <li><a href="users.jsp.html" title="Manage Users">Users</a></li>
 		  <li><a href="logIngredientRestock.html" title="View  Logs">View  Logs</a></li>
 		  <li><a href="" title="Log Out">Log Out</a></li>
 		  <li id="dateTime">DATE / TIME</li>
@@ -60,6 +63,7 @@
 	</div>
 	<div class="right">
 	  <a class="button left" href="#createUser" title="Create New User">Create New User</a>
+           <a class="button left" href="#editUser" title="Edit">Edit User</a>
 	</div>
 	<br class="clear">
 	<table>
@@ -67,26 +71,20 @@
 	    <th>Username</th>
 	    <th>Password</th>
 	    <th>User Position</th>
-	    <th>Edit User</th>
+	    
 	  </tr>
+          <% UserImplementation userDAO = new UserImplementation();
+          UsersBean userBean = new UsersBean();%>
+          <% for(int i = 0; i < userDAO.getUsersList().size();i++){ %>
 	  <tr>
-	    <td>Manager</td>
-	    <td>hello</td>
-	    <td>Admin</td>
-	    <td class="tableButton"><a href="#editUser" title="Edit">> Edit</a></td>
+              
+	    <td><%=userDAO.getUsersList().get(i).getUser_name()%></td>
+	    <td><%=userDAO.getUsersList().get(i).getUser_password()%></td>
+	    <td><%=userDAO.getUsersList().get(i).getUser_level()%></td>
+	    
 	  </tr>
-	  <tr>
-	    <td>Checker</td>
-	    <td>cat</td>
-	    <td>User</td>
-	    <td class="tableButton"><a href="#editUser" title="Edit">> Edit</a></td>
-	  </tr>
-	  <tr>
-	    <td>Sales</td>
-	    <td>dog</td>
-	    <td>User</td>
-	    <td class="tableButton"><a href="#editUser" title="Edit">> Edit</a></td>
-	  </tr>
+	  
+          <% }%>
 	</table>
   </section>
   <!--MODALS START-->
@@ -94,14 +92,14 @@
 	  <div>
 		<a class="right close button" href="#close" title="Close">X</a>
 	    <h3>Create New User</h3>
-		<form id="createUserForm">
+		<form id="createUserForm" method="POST" action="AddUserServlet" >
 		  <ul>
-		    <li>New Username: <input required type="text" name="newUsername"></li>
-		    <li>New Password: <input required type="text" name="newPassword"></li>
+		    <li>New Username: <input required type="text" name="Username"></li>
+		    <li>New Password: <input required type="text" name="Password"></li>
 		    <li>User Position: 
-			  <select>
+			  <select name="Position">
 			    <option value="admin">Admin</option>
-			    <option value="employee">Employee</option>
+			    <option value="user">User</option>
 			  </select>
 			</li>
 		  </ul>
@@ -110,19 +108,27 @@
 		</form>
 	  </div>
 	</div>
+  
+  
 	<div id="editUser" class="wrapModal">
 	  <div>
 		<a class="right close button" href="#close" title="Close">X</a>
 	    <h3>Edit User</h3>
-		<form id="editUserForm">
+		<form action="EditUserServlet" method="POST">
 		  <ul>
-		    <li id="editUserName"><h4>User</h4></li>
-		    <li>New Username: <input required type="text" name="newUsername"></li>
-		    <li>New Password: <input required type="text" name="newPassword"></li>
+		    <li>User to Edit:
+			  <select name="username" onchange="ajaxEdit(this.value)">
+                               <% for(int i = 0; i < userDAO.getUsersList().size();i++){ %>
+			    <option value="<%=userDAO.getUsersList().get(i).getUser_name()%>"><%=userDAO.getUsersList().get(i).getUser_name()%></option>
+                            <% }%>
+			  </select>
+		    </li>
+		    <li>New Username: <input required type="text" id="newUsername" name="newUsername"></li>
+		    <li>New Password: <input required type="text" id="newPassword" name="newPassword"></li>
 		    <li>New User Position: 
-			  <select>
+			  <select name="newPosition" id="newPosition">
 			    <option value="admin">Admin</option>
-			    <option value="employee">Employee</option>
+			    <option value="user">User</option>
 			  </select>
 			</li>
 		  </ul>
@@ -135,4 +141,35 @@
   <!--CONTENT END-->
   </div>
 </body>
+<script>
+       function ajaxEdit(username){
+
+             $.ajax({
+
+        url: "GenerateEditUser",
+
+        type: 'POST',
+
+        dataType: "json",
+
+        data: {
+            editUsername : username
+        },
+
+        success: function (data) {
+           
+           newUsername.value=data.Username;
+           newPassword.value=data.Password;
+           newPosition.value=data.Position;
+           
+           
+        },
+
+        error: function(XMLHttpRequest, textStatus, exception) {
+            alert(XMLHttpRequest.responseText);
+        }
+    });}
+    
+</script>
+    
 </html>

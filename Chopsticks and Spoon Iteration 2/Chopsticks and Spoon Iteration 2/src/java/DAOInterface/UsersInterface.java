@@ -15,15 +15,19 @@ import java.util.ArrayList;
  */
 public interface UsersInterface {
     
-    public void addUser(UsersBean ubean);
+    public boolean addUser(UsersBean ubean);
     
     public void deleteUser(UsersBean ubean);
     
-    public UsersBean userLogin(String userid, String password);
+    public boolean editUser(UsersBean ubean, int x);
+    
+    public boolean userLogin(String userid, String password);
     
     public ArrayList<UsersBean> getUsersList();
     
     public UsersBean getUser(String username);
+    
+    public boolean checkUserExists(String username);
     
  
             

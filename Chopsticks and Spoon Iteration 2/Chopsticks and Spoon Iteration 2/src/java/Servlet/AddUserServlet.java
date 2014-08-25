@@ -11,20 +11,18 @@ import DAOImplementation.UserImplementation;
 import DAOInterface.UsersInterface;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.ArrayList;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 
 /**
  *
- * @author Keiko Nagano
+ * @author JasonTan
  */
-@WebServlet(name = "LoginServlet", urlPatterns = {"/LoginServlet"})
-public class LoginServlet extends HttpServlet {
+@WebServlet(name = "AddUserServlet", urlPatterns = {"/AddUserServlet"})
+public class AddUserServlet extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -40,15 +38,13 @@ public class LoginServlet extends HttpServlet {
         response.setContentType("text/html;charset=UTF-8");
         PrintWriter out = response.getWriter();
         try {
-            /* TODO output your page here. You may use following sample code. */
-           UsersInterface account = new UserImplementation();
-          
-           if(account.userLogin(request.getParameter("username"), request.getParameter("password")))
-                response.sendRedirect("dishes.jsp");
-           else{
-               out.println("<script>alert('Login fail.')</script>");
-               out.println("<script>window.location='index.jsp'</script>");
-           }
+           UsersInterface userDAO = new UserImplementation();
+           UsersBean userBean = new UsersBean();
+           userBean.setUser_name(request.getParameter("Username"));
+           userBean.setUser_password(request.getParameter("Password"));
+           userBean.setUser_level(request.getParameter("Position"));
+           if(userDAO.addUser(userBean))
+              response.sendRedirect("users.jsp");
         } finally {
             out.close();
         }
