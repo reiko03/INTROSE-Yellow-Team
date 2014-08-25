@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<!--[if lt IE 7 ]><html class="ie ie6" lang="en"> <![endif]-->
+<!--[if IE 7 ]><html class="ie ie7" lang="en"> <![endif]-->
+<!--[if IE 8 ]><html class="ie ie8" lang="en"> <![endif]-->
+<!--[if (gte IE 9)|!(IE)]><!--><html lang="en"> <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Users | Chopsticks &amp; Spoon</title>
+  <meta name="description" content="">
+  <meta name="author" content="">  
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"> 
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="icon" href="images/favicon.ico">
+</head>
+<body id="body_users">
+  <div class="wrap">
+  <!--SIDENAV START-->
+  <div class="wrapSideNav">
+    <div class="sideNav">
+	  <div class="userProfile">
+	    <span class="username">Username</span>
+		<span class="position">Position</span>
+	  </div>
+	  <ul>
+	    <li class="nav_pos"><a href="pos.html" title="Point of Sales">Point of Sales</a></li>
+	    <li class="nav_ingredients"><a href="ingredients.html" title="Ingredients">Ingredients <span>2</span></a></li>
+	    <li class="nav_packaged"><a href="packaged.html" title="Pacakaged Items">Packaged Items <span>1</span></a></li>
+      </ul>
+    </div>
+  </div>
+  <!--SIDENAV END-->
+  <br class="clear">
+  <div class="wrapHeader">
+  <!--HEADER START-->
+  <header>    
+      <hgroup id="logo">
+	    <h2>Chopsticks &amp; Spoon</h2>
+	  </hgroup>
+      <div class="subMenu">
+	    <ul>
+	      <li><a href="dishes.html" title="Manage Dishes">Dishes <span>1</span></a></li>
+		  <li><a href="users.html" title="Manage Users">Users</a></li>
+		  <li><a href="logIngredientRestock.html" title="View  Logs">View  Logs</a></li>
+		  <li><a href="" title="Log Out">Log Out</a></li>
+		  <li id="dateTime">DATE / TIME</li>
+	    </ul>
+      </div>
+    <br class="clear">
+  </header>
+  <!--HEADER END-->
+  </div>
+  <!--CONTENT START-->
+  <section class="wrapContent">
+    <h1>Users</h1>
+	<div class="left">
+	  <form id="searchDish" class="search">
+	    <input type="search" name="search" placeholder="Search..">
+		<input type="submit" value="Search">
+	  </form>
+	</div>
+	<div class="right">
+	  <a class="button left" href="#createUser" title="Create New User">Create New User</a>
+	</div>
+	<br class="clear">
+	<table>
+	  <tr>
+	    <th>Username</th>
+	    <th>Password</th>
+	    <th>User Position</th>
+	    <th>Edit User</th>
+	  </tr>
+	  <tr>
+	    <td>Manager</td>
+	    <td>hello</td>
+	    <td>Admin</td>
+	    <td class="tableButton"><a href="#editUser" title="Edit">> Edit</a></td>
+	  </tr>
+	  <tr>
+	    <td>Checker</td>
+	    <td>cat</td>
+	    <td>User</td>
+	    <td class="tableButton"><a href="#editUser" title="Edit">> Edit</a></td>
+	  </tr>
+	  <tr>
+	    <td>Sales</td>
+	    <td>dog</td>
+	    <td>User</td>
+	    <td class="tableButton"><a href="#editUser" title="Edit">> Edit</a></td>
+	  </tr>
+	</table>
+  </section>
+  <!--MODALS START-->
+	<div id="createUser" class="wrapModal">
+	  <div>
+		<a class="right close button" href="#close" title="Close">X</a>
+	    <h3>Create New User</h3>
+		<form id="createUserForm">
+		  <ul>
+		    <li>New Username: <input required type="text" name="newUsername"></li>
+		    <li>New Password: <input required type="text" name="newPassword"></li>
+		    <li>User Position: 
+			  <select>
+			    <option value="admin">Admin</option>
+			    <option value="employee">Employee</option>
+			  </select>
+			</li>
+		  </ul>
+		  <br class="clear">
+		  <input type="submit" value="Submit">
+		</form>
+	  </div>
+	</div>
+	<div id="editUser" class="wrapModal">
+	  <div>
+		<a class="right close button" href="#close" title="Close">X</a>
+	    <h3>Edit User</h3>
+		<form id="editUserForm">
+		  <ul>
+		    <li id="editUserName"><h4>User</h4></li>
+		    <li>New Username: <input required type="text" name="newUsername"></li>
+		    <li>New Password: <input required type="text" name="newPassword"></li>
+		    <li>New User Position: 
+			  <select>
+			    <option value="admin">Admin</option>
+			    <option value="employee">Employee</option>
+			  </select>
+			</li>
+		  </ul>
+		  <br class="clear">
+		  <input type="submit" value="Submit">
+		</form>
+	  </div>
+	</div>
+	<!--MODALS END-->
+  <!--CONTENT END-->
+  </div>
+</body>
+</html>
