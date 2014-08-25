@@ -6,22 +6,27 @@
 
 package Servlet;
 
-import DAOImplementation.IngredientImplementation;
-import DAOInterface.IngredientInterface;
+import Bean.PackagedBean;
+import DAOImplementation.PackagedImplementation;
+import DAOInterface.PackagedInterface;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 /**
  *
  * @author Keiko Nagano
  */
-@WebServlet(name = "EditIngredientServlet", urlPatterns = {"/EditIngredientServlet"})
-public class EditIngredientServlet extends HttpServlet {
+@WebServlet(name = "AjaxEditPackagedServlet", urlPatterns = {"/AjaxEditPackagedServlet"})
+public class AjaxEditPackagedServlet extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -38,17 +43,26 @@ public class EditIngredientServlet extends HttpServlet {
         PrintWriter out = response.getWriter();
         try {
             /* TODO output your page here. You may use following sample code. */
-            IngredientInterface in = new IngredientImplementation();
-            int id = Integer.parseInt(request.getParameter("ingredientID"));
-            String name = request.getParameter("ingredientName");
-            int threshold = Integer.parseInt(request.getParameter("ingredientThreshold"));
+            JSONObject obj = new JSONObject();
+            String packagedID = request.getParameter("packagedID");
+            PackagedInterface packagedDAO = new PackagedImplementation();
+            PackagedBean packagedBean = packagedDAO.getPackaged(Integer.parseInt(packagedID));
+            System.out.println(packagedID);
+             try {
+                  obj.put("PackagedID", packagedBean.getPackaged_id());
+                  obj.put("PackagedName", packagedBean.getPackaged_name());
+                  obj.put("PackagedPrice", packagedBean.getPackaged_price());
+                  obj.put("PackagedThreshold", packagedBean.getPackaged_threshold());
+
             
-            System.out.println("ingredient" +id);
-            System.out.println(name);
-            System.out.println(threshold);
-            in.editIngredient(id, name, threshold);
-          
-            response.sendRedirect("ingredients.jsp");
+            
+                   
+              } catch (JSONException ex) {
+                  Logger.getLogger(AjaxEditPackagedServlet.class.getName()).log(Level.SEVERE, null, ex);
+              }
+               
+            out.print(obj);
+            out.flush();
         } finally {
             out.close();
         }

@@ -20,11 +20,15 @@ public interface IngredientInterface {
     
     public void addIngredient(IngredientBean ibean);
     
+    public void editIngredient(int id, String name, int threshold);
+    
     public void restockIngredient(IngredientBean ibean);
     
     public void removeSpoiled(IngredientBean ibean);
     
     public void addIngredientRestockLog(IngredientBean ibean, UsersBean user);
+    
+    public IngredientBean getIngredient(int ingredientID);
     
     public ArrayList<IngredientRestockLogBean> getIngredientRestockLogList();
     

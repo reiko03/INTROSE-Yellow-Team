@@ -6,8 +6,8 @@
 
 package Servlet;
 
-import DAOImplementation.IngredientImplementation;
-import DAOInterface.IngredientInterface;
+import DAOImplementation.PackagedImplementation;
+import DAOInterface.PackagedInterface;
 import java.io.IOException;
 import java.io.PrintWriter;
 import javax.servlet.ServletException;
@@ -20,8 +20,8 @@ import javax.servlet.http.HttpServletResponse;
  *
  * @author Keiko Nagano
  */
-@WebServlet(name = "EditIngredientServlet", urlPatterns = {"/EditIngredientServlet"})
-public class EditIngredientServlet extends HttpServlet {
+@WebServlet(name = "EditPackagedServlet", urlPatterns = {"/EditPackagedServlet"})
+public class EditPackagedServlet extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -38,17 +38,19 @@ public class EditIngredientServlet extends HttpServlet {
         PrintWriter out = response.getWriter();
         try {
             /* TODO output your page here. You may use following sample code. */
-            IngredientInterface in = new IngredientImplementation();
-            int id = Integer.parseInt(request.getParameter("ingredientID"));
-            String name = request.getParameter("ingredientName");
-            int threshold = Integer.parseInt(request.getParameter("ingredientThreshold"));
+            PackagedInterface pack = new PackagedImplementation();
+            int id = Integer.parseInt(request.getParameter("packagedID"));
+            String name = request.getParameter("packagedName");
+            double price = Double.parseDouble(request.getParameter("packagedPrice"));
+            int threshold = Integer.parseInt(request.getParameter("packagedThreshold"));
             
-            System.out.println("ingredient" +id);
+            System.out.println("packaged " +id);
             System.out.println(name);
+            System.out.println(price);
             System.out.println(threshold);
-            in.editIngredient(id, name, threshold);
+            pack.editPackaged(id, name, price, threshold);
           
-            response.sendRedirect("ingredients.jsp");
+            response.sendRedirect("packaged.jsp");
         } finally {
             out.close();
         }

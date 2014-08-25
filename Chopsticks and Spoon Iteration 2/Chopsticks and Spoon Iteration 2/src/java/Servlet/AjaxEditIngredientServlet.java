@@ -6,22 +6,27 @@
 
 package Servlet;
 
+import Bean.IngredientBean;
 import DAOImplementation.IngredientImplementation;
 import DAOInterface.IngredientInterface;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 /**
  *
- * @author Keiko Nagano
+ * @author JasonTan
  */
-@WebServlet(name = "EditIngredientServlet", urlPatterns = {"/EditIngredientServlet"})
-public class EditIngredientServlet extends HttpServlet {
+@WebServlet(name = "AjaxEditIngredientServlet", urlPatterns = {"/AjaxEditIngredientServlet"})
+public class AjaxEditIngredientServlet extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -38,17 +43,25 @@ public class EditIngredientServlet extends HttpServlet {
         PrintWriter out = response.getWriter();
         try {
             /* TODO output your page here. You may use following sample code. */
-            IngredientInterface in = new IngredientImplementation();
-            int id = Integer.parseInt(request.getParameter("ingredientID"));
-            String name = request.getParameter("ingredientName");
-            int threshold = Integer.parseInt(request.getParameter("ingredientThreshold"));
+            JSONObject obj = new JSONObject();
+             String ingredientID = request.getParameter("ingredientID");
+            IngredientInterface ingredientDAO = new IngredientImplementation();
+            IngredientBean ingredientBean = ingredientDAO.getIngredient(Integer.parseInt(ingredientID));
+            System.out.println(ingredientID);
+             try {
+                  obj.put("IngredientID", ingredientBean.getIngredient_id());
+                  obj.put("IngredientName", ingredientBean.getIngredient_name());
+                   obj.put("IngredientThreshold", ingredientBean.getIngredient_threshold());
+
             
-            System.out.println("ingredient" +id);
-            System.out.println(name);
-            System.out.println(threshold);
-            in.editIngredient(id, name, threshold);
-          
-            response.sendRedirect("ingredients.jsp");
+            
+                   
+              } catch (JSONException ex) {
+                  Logger.getLogger(AjaxEditIngredientServlet.class.getName()).log(Level.SEVERE, null, ex);
+              }
+               
+            out.print(obj);
+            out.flush();
         } finally {
             out.close();
         }

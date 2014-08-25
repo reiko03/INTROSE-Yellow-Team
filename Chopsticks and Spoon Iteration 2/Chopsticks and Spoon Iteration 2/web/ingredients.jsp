@@ -11,6 +11,7 @@
   <meta name="description" content="">
   <meta name="author" content="">  
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"> 
+  <script src="bootstrap/js/jquery-2.1.1.js"></script>
   <link rel="stylesheet" href="css/style.css">
   <link rel="icon" href="images/favicon.ico">
 </head>
@@ -58,6 +59,7 @@
 	  <form id="searchIngredient" class="search">
 	    <input type="search" name="search" placeholder="Search..">
 		<input type="submit" value="Search">
+                
 	  </form>
 	</div>
 	<div class="right">
@@ -76,16 +78,48 @@
 	  </tr>
 	  <% 
           ArrayList<IngredientBean> inglist = (ArrayList<IngredientBean>) session.getAttribute("ingredientlist");
-            // String ingredientname;
+            
                 for(int i = 0; i < inglist.size(); i++){%>
           <tr>  
 	    <td><%out.println(inglist.get(i).getIngredient_name());%></td>
 	    <td><%out.println(inglist.get(i).getIngredient_weight());%></td>
 	    <td><%out.println(inglist.get(i).getIngredient_cost());%></td>
-		<td class="tableButton"><a href="#editIngredient" title="Edit" > Edit</a></td>
+		<td class="tableButton"><a href="#editIngredient" title="Edit"  onclick="ajaxEdit(<%=inglist.get(i).getIngredient_id()%>)" > Edit</a></td>
 		<td class="tableButton"><a href="#restockIngredient" title="Restock">+ Restock</a></td>
 	  </tr>
           <% } %>
+          
+          <script>
+           function ajaxEdit(id){
+
+             $.ajax({
+
+        url: "AjaxEditIngredientServlet",
+
+        type: 'POST',
+
+        dataType: "json",
+
+        data: {
+            ingredientID : id
+        },
+
+        success: function (data) {
+           
+          ingredientID.value=data.IngredientID;
+           ingredientName.value=data.IngredientName;
+           ingredientThreshold.value=data.IngredientThreshold;
+           
+           
+           
+        },
+
+        error: function(XMLHttpRequest, textStatus, exception) {
+            alert(XMLHttpRequest.responseText);
+        }
+    });}
+            </script>
+            
           <!--
 	  <tr class="warning">
 	    <td>pancit bihon</td>
@@ -178,9 +212,10 @@
 	    <h3>Edit Ingredient</h3>
 		<form action="EditIngredientServlet" id="restockIngredientForm">
 		  <ul>
-		    <li id="editIngredientName"><h4><%out.println(inglist.get(i).getIngredient_name());%></h4></li>
-		    <li>New Ingredient Name: <input required type="text" name="ingredientName"></li>
-		    <li>New Ingredient Threshold: <input required type="text" name="ingredientThreshold"></li>		    
+                      <li id="editIngredientName"><h4> Ingredient Info </h4></li>
+                      <input type="hidden" id="ingredientID" name="ingredientID">
+		    <li>New Ingredient Name: <input required type="text" id="ingredientName" name="ingredientName"></li>
+		    <li>New Ingredient Threshold: <input required type="text" id="ingredientThreshold" name="ingredientThreshold"></li>		    
 		  </ul>
 		  <br class="clear">
 		  <input type="submit" value="Submit">

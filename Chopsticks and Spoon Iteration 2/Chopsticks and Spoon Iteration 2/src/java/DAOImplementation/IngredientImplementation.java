@@ -46,6 +46,47 @@ public class IngredientImplementation implements IngredientInterface {
     }
 
     @Override
+    public void editIngredient(int id, String name, int threshold) {
+       try {
+            Connector c = new Connector();
+            Connection connection = c.getConnection();
+            
+            String query = "update ingredient set ingredient_name = ?, ingredient_threshold = ? where ingredient_id =?";
+            PreparedStatement ps = connection.prepareStatement(query);
+            ps.setString(1, name);
+            ps.setInt(2, threshold);
+            ps.setInt(3, id);
+            ps.executeUpdate(); //add, update, delete
+        } catch (SQLException ex) {
+            Logger.getLogger(IngredientImplementation.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
+    public IngredientBean getIngredient(int ingredientID){
+        Connector connector = new Connector();
+        Connection connection = connector.getConnection();
+        IngredientBean ingredientBean = new IngredientBean();
+        String query = "SELECT * FROM ingredient WHERE ingredient_id = ? ";
+        try{
+        PreparedStatement ps = connection.prepareStatement(query);
+        ps.setInt(1,ingredientID);
+        ResultSet rs = ps.executeQuery();
+        while(rs.next()){
+         ingredientBean.setIngredient_id(rs.getInt(1));
+         ingredientBean.setIngredient_name(rs.getString(2));
+         ingredientBean.setIngredient_weight(rs.getDouble(3));
+         ingredientBean.setIngredient_cost(rs.getDouble(4));
+         ingredientBean.setIngredient_threshold(rs.getInt(5));
+         return ingredientBean;
+        }
+        }catch(SQLException exc){
+            
+        }
+        
+        return ingredientBean;
+    }
+    
+    @Override
     public void addIngredientRestockLog(IngredientBean ibean, UsersBean user) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
@@ -66,12 +107,12 @@ public class IngredientImplementation implements IngredientInterface {
             ResultSet resultSet = preparedStatement.executeQuery();
             while (resultSet.next()) {
                 IngredientBean temp = new IngredientBean();
-                
+                temp.setIngredient_id(resultSet.getInt("ingredient_id"));
                 temp.setIngredient_name(resultSet.getString("ingredient_name"));
                 temp.setIngredient_weight(resultSet.getDouble("ingredient_weight"));
                 temp.setIngredient_cost(resultSet.getDouble("ingredient_cost"));
                 temp.setIngredient_threshold(resultSet.getInt("ingredient_threshold"));
-                System.out.println("pumasok sa getlist");
+                
                 ingredientBean.add(temp);
             }
         } catch (SQLException ex) {

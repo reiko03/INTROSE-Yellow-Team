@@ -20,6 +20,8 @@ public interface PackagedInterface {
     
     public void addPackaged(PackagedBean pbean);
     
+    public void editPackaged(int id, String name, double price, int threshold);
+    
     public void restockPackaged(PackagedBean pbean);
     
     public void removeDamaged(PackagedBean pbean);
@@ -27,6 +29,8 @@ public interface PackagedInterface {
     public void addPackagedRestockLog(PackagedBean pbean, UsersBean user);
     
     public ArrayList<PackagedRestockLogBean> getPackagedRestockLogList();
+    
+    public PackagedBean getPackaged(int packagedID);
     
     public void addDamageLog(PackagedBean pbean, UsersBean user);
     

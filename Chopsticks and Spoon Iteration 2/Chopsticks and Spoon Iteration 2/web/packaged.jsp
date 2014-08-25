@@ -10,7 +10,8 @@
   <title>Packaged Items | Chopsticks &amp; Spoon</title>
   <meta name="description" content="">
   <meta name="author" content="">  
-  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"> 
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <script src="bootstrap/js/jquery-2.1.1.js"></script>
   <link rel="stylesheet" href="css/style.css">
   <link rel="icon" href="images/favicon.ico">
 </head>
@@ -84,10 +85,43 @@
 	    <td><%out.println(packlist.get(i).getPackaged_quantity());%></td>
 	    <td><%out.println(packlist.get(i).getPackaged_cost());%></td>
             <td><%out.println(packlist.get(i).getPackaged_price());%></td>
-		<td class="tableButton"><a href="#editPackaged" title="Edit">> Edit</a></td>
+		<td class="tableButton"><a href="#editPackaged" title="Edit" onclick="ajaxEditPackaged(<%=packlist.get(i).getPackaged_id()%>)"> Edit</a></td>
 		<td class="tableButton"><a href="#restockPackaged" title="Restock">+ Restock</a></td>
 	  </tr>
           <% } %>
+          
+           <script>
+           function ajaxEditPackaged(id){
+
+             $.ajax({
+
+        url: "AjaxEditPackagedServlet",
+
+        type: 'POST',
+
+        dataType: "json",
+
+        data: {
+            packagedID : id
+        },
+
+        success: function (data) {
+           
+           packagedID.value=data.PackagedID;
+           packagedName.value=data.PackagedName;
+           packagedPrice.value=data.PackagedPrice;
+           packagedThreshold.value=data.PackagedThreshold;
+           
+           
+           
+        },
+
+        error: function(XMLHttpRequest, textStatus, exception) {
+            alert(XMLHttpRequest.responseText);
+        }
+    });}
+            </script>
+          
           <!--
 	  <tr>
 	    <td>C2 green 500ml</td>
@@ -175,12 +209,13 @@
 	  <div>
 	    <a class="right close button" href="#close" title="Close">X</a>
 	    <h3>Edit Packaged Item</h3>
-		<form id="editPackagedForm">
+		<form action="EditPackagedServlet" id="editPackagedForm">
 		  <ul>
-		    <li id="editPackagedName"><h4>Packaged Item</h4></li>
-		    <li>New Name: <input required type="text" name="packagedName"></li>
-		    <li>New Selling Price: <input required type="text" name="packagedPrice"></li>
-		    <li>New Threshold: <input required type="text" name="packagedThreshold"></li>
+		    <li id="editPackagedName"><h4>Packaged Item Info</h4></li>
+                    <input type="hidden" id="packagedID" name="packagedID">
+		    <li>New Name: <input required type="text" id="packagedName" name="packagedName"></li>
+		    <li>New Selling Price: <input required type="text" id="packagedPrice" name="packagedPrice"></li>
+		    <li>New Threshold: <input required type="text" id="packagedThreshold" name="packagedThreshold"></li>
 		  </ul>
 		  <br class="clear">
 		  <input type="submit" value="Submit">
