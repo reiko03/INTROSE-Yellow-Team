@@ -36,6 +36,7 @@ public class EditIngredientServlet extends HttpServlet {
         PrintWriter out = response.getWriter();
         try {
             /* TODO output your page here. You may use following sample code. */
+            //test kung updated
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
