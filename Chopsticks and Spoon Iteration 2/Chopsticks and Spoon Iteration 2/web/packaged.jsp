@@ -149,31 +149,6 @@
     });}
             </script>
           
-          <!--
-	  <tr>
-	    <td>C2 green 500ml</td>
-	    <td>7 pcs</td>
-	    <td>16.00</td>
-	    <td>20.00</td>
-		<td class="tableButton"><a href="#editPackaged" title="Edit">> Edit</a></td>
-		<td class="tableButton"><a href="#restockPackaged" title="Restock">+ Restock</a></td>
-	  </tr>
-	  <tr>
-	    <td>Mogu Mogu 500ml</td>
-	    <td>7 pcs</td>
-	    <td>20.00</td>
-	    <td>25.00</td>
-		<td class="tableButton"><a href="#editPackaged" title="Edit">> Edit</a></td>
-		<td class="tableButton"><a href="#restockPackaged" title="Restock">+ Restock</a></td>
-	  </tr>
-	  <tr>
-	    <td>C2 Red 500ml</td>
-	    <td>9 pcs</td>
-	    <td>16.00</td>
-	    <td>20.00</td>
-		<td class="tableButton"><a href="#editPackaged" title="Edit">> Edit</a></td>
-		<td class="tableButton"><a href="#restockPackaged" title="Restock">+ Restock</a></td>
-	  </tr>-->
 	</table>
   </section>
   <!--MODALS START-->

@@ -78,8 +78,8 @@
 	  </tr>
 	  <% 
           ArrayList<IngredientBean> inglist = (ArrayList<IngredientBean>) session.getAttribute("ingredientlist");
-            
-                for(int i = 0; i < inglist.size(); i++){%>
+            System.out.println("WHYYYY");
+                for(int i = 0; i < inglist.size(); i++){ System.out.println(inglist.get(i).getIngredient_id());%>
           <tr>  
 	    <td><%out.println(inglist.get(i).getIngredient_name());%></td>
 	    <td><%out.println(inglist.get(i).getIngredient_weight());%></td>
@@ -106,11 +106,9 @@
 
         success: function (data) {
            
-          ingredientID.value=data.IngredientID;
+           ingredientID.value=data.IngredientID;
            ingredientName.value=data.IngredientName;
            ingredientThreshold.value=data.IngredientThreshold;
-           
-           
            
         },
 
@@ -147,49 +145,7 @@
     });}
             </script>
             
-          <!--
-	  <tr class="warning">
-	    <td>pancit bihon</td>
-	    <td>5 kg</td>
-	    <td>80.00</td>
-		<td class="tableButton"><a href="#editIngredient" title="Edit">> Edit</a></td>
-		<td class="tableButton"><a href="#restockIngredient" title="Restock">+ Restock</a></td>
-	  </tr>
-	  <tr class="warning">
-	    <td>pancit miki</td>
-	    <td>4 kg</td>
-	    <td>70.00</td>
-		<td class="tableButton"><a href="#editIngredient" title="Edit">> Edit</a></td>
-		<td class="tableButton"><a href="#restockIngredient" title="Restock">+ Restock</a></td>
-	  </tr>
-	  <tr>
-	    <td>beef</td>
-	    <td>10 kg</td>
-	    <td>120.00</td>
-		<td class="tableButton"><a href="#editIngredient" title="Edit">> Edit</a></td>
-		<td class="tableButton"><a href="#restockIngredient" title="Restock">+ Restock</a></td>
-	  </tr>
-	  <tr>
-	    <td>carrots</td>
-	    <td>8.5 kg</td>
-	    <td>100.00</td>
-		<td class="tableButton"><a href="#editIngredient" title="Edit">> Edit</a></td>
-		<td class="tableButton"><a href="#restockIngredient" title="Restock">+ Restock</a></td>
-	  </tr>
-	  <tr>
-	    <td>dory</td>
-	    <td>8.5 kg</td>
-	    <td>140.00</td>
-		<td class="tableButton"><a href="#editIngredient" title="Edit">> Edit</a></td>
-		<td class="tableButton"><a href="#restockInrgedient" title="Restock">+ Restock</a></td>
-	  </tr>
-	  <tr>
-	    <td>potatoes</td>
-	    <td>7 kg</td>
-	    <td>110.00</td>
-		<td class="tableButton"><a href="#editIngredient" title="Edit">> Edit</a></td>
-		<td class="tableButton"><a href="#restockIngredient" title="Restock">+ Restock</a></td>
-	  </tr>-->
+         
 	</table>
   </section>
           
@@ -201,7 +157,7 @@
 	    <h3>Report Spoiled Ingredient</h3>
 		<form action="ReportSpoiledIngredient" id="reportSpoiledForm">
 		  <ul>
-		  <li>Ingredient Name:
+		  <li>Ingredient 
 		    <select name="chooseIngredient">
                       <%for(int j = 0; j < inglist.size(); j++){%>
 		      <option value="<%=inglist.get(j).getIngredient_id()%>"><%out.println(inglist.get(j).getIngredient_name());%></option>
