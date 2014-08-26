@@ -26,8 +26,8 @@
 	  </div>
 	  <ul>
 	    <li class="nav_pos"><a href="pos.jsp" title="Point of Sales">Point of Sales</a></li>
-	    <li class="nav_ingredients"><a href="ingredients.jsp" title="Ingredients">Ingredients <span>2</span></a></li>
-	    <li class="nav_packaged"><a href="packaged.jsp" title="Pacakaged Items">Packaged Items <span>1</span></a></li>
+	    <li class="nav_ingredients"><a href="GetIngredientListServlet" title="Ingredients">Ingredients <span>2</span></a></li>
+	    <li class="nav_packaged"><a href="GetPackagedListServlet" title="Pacakaged Items">Packaged Items <span>1</span></a></li>
       </ul>
     </div>
   </div>
