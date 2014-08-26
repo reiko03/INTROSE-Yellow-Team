@@ -42,7 +42,7 @@
       <div class="subMenu">
 	    <ul>
 	      <li><a href="dishes.html" title="Manage Dishes">Dishes <span>1</span></a></li>
-		  <li><a href="users.html" title="Manage Users">Users</a></li>
+		  <li><a href="users.jsp" title="Manage Users">Users</a></li>
 		  <li><a href="logIngredientRestock.html" title="View Logs">View Logs</a></li>
 		  <li><a href="" title="Log Out">Log Out</a></li>
 		  <li id="dateTime">DATE / TIME</li>

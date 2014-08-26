@@ -66,7 +66,7 @@ public class IngredientImplementation implements IngredientInterface {
         Connector connector = new Connector();
         Connection connection = connector.getConnection();
         IngredientBean ingredientBean = new IngredientBean();
-        String query = "SELECT * FROM ingredient WHERE ingredient_id = ? ";
+        String query = "SELECT * FROM ingredient WHERE ingredient_id = ? ";System.out.println("pumasok sa getIngredient");
         try{
         PreparedStatement ps = connection.prepareStatement(query);
         ps.setInt(1,ingredientID);
@@ -101,7 +101,7 @@ public class IngredientImplementation implements IngredientInterface {
         Connector connector = new Connector();
         Connection connection = connector.getConnection();
         ArrayList<IngredientBean> ingredientBean = new ArrayList<IngredientBean>();
-        String query = "SELECT * FROM ingredient";
+        String query = "SELECT * FROM ingredient"; 
         try {
             PreparedStatement preparedStatement = connection.prepareCall(query);
             ResultSet resultSet = preparedStatement.executeQuery();

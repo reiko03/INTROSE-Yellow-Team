@@ -46,7 +46,6 @@ public class GetPackagedListServlet extends HttpServlet {
            // AccountBean b = (AccountBean)session.getAttribute("sl");
            // System.out.println(b.getUsername());
             
-          //  ArrayList<ShowListBean> watchingBean = listInterface.getWatchingList(b.getUsername());
             ArrayList<PackagedBean> pb =  packInterface.getPackagedList();
             
             

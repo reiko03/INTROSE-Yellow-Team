@@ -47,14 +47,13 @@ public class AjaxEditIngredientServlet extends HttpServlet {
              String ingredientID = request.getParameter("ingredientID");
             IngredientInterface ingredientDAO = new IngredientImplementation();
             IngredientBean ingredientBean = ingredientDAO.getIngredient(Integer.parseInt(ingredientID));
+            System.out.println("pumasok sa ajaxeditingredient servlet");
             System.out.println(ingredientID);
              try {
                   obj.put("IngredientID", ingredientBean.getIngredient_id());
                   obj.put("IngredientName", ingredientBean.getIngredient_name());
                    obj.put("IngredientThreshold", ingredientBean.getIngredient_threshold());
 
-            
-            
                    
               } catch (JSONException ex) {
                   Logger.getLogger(AjaxEditIngredientServlet.class.getName()).log(Level.SEVERE, null, ex);

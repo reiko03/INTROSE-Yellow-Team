@@ -46,11 +46,8 @@ public class GetIngredientListServlet extends HttpServlet {
            // AccountBean b = (AccountBean)session.getAttribute("sl");
            // System.out.println(b.getUsername());
             
-          //  ArrayList<ShowListBean> watchingBean = listInterface.getWatchingList(b.getUsername());
             ArrayList<IngredientBean> ib =  ingInterface.getIngredientList();
-            if(ib == null)
-            System.out.println("walang laman si ib huhubells");
-            else System.out.println("may laman si ib so iba prob huhubells");
+           
             session.setAttribute("ingredientlist", ib);
             response.sendRedirect("ingredients.jsp");
         } finally {
