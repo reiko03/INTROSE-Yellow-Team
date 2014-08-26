@@ -66,7 +66,7 @@ public class IngredientImplementation implements IngredientInterface {
         Connector connector = new Connector();
         Connection connection = connector.getConnection();
         IngredientBean ingredientBean = new IngredientBean();
-        String query = "SELECT * FROM ingredient WHERE ingredient_id = ? ";System.out.println("pumasok sa getIngredient");
+        String query = "SELECT * FROM ingredient WHERE ingredient_id = ? ";
         try{
         PreparedStatement ps = connection.prepareStatement(query);
         ps.setInt(1,ingredientID);
@@ -137,8 +137,43 @@ public class IngredientImplementation implements IngredientInterface {
     }
 
     @Override
-    public void restockIngredient(IngredientBean ibean) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public void restockIngredient(int id, double weight, double cost) {
+        try {
+            Connector c = new Connector();
+            Connection connection = c.getConnection();
+            IngredientBean temp = new IngredientBean();
+            double resultWeight;
+            double resultCost;
+            
+            //first get the specific ingredient to make calculations
+            String queryGetIngredient = "SELECT ingredient_weight, ingredient_cost FROM ingredient WHERE ingredient_id =?"; 
+           
+            PreparedStatement ps1 = connection.prepareStatement(queryGetIngredient);
+            ps1.setInt(1, id);
+            ResultSet resultSet = ps1.executeQuery();
+            
+            while (resultSet.next()) {
+                temp.setIngredient_weight(resultSet.getDouble("ingredient_weight"));
+                temp.setIngredient_cost(resultSet.getDouble("ingredient_cost"));
+                
+            }
+            
+            //CALCULATION
+            resultWeight = weight + temp.getIngredient_weight();
+            resultCost = ((cost + temp.getIngredient_cost()) / 2);
+            
+            
+            //update the database
+            String query = "update ingredient set ingredient_weight = ?, ingredient_cost = ? where ingredient_id =?";
+            PreparedStatement ps2 = connection.prepareStatement(query);
+            ps2.setDouble(1, resultWeight);
+            ps2.setDouble(2, resultCost);
+            ps2.setInt(3, id);
+            ps2.executeUpdate();
+            
+        } catch (SQLException ex) {
+            Logger.getLogger(IngredientImplementation.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
     
     

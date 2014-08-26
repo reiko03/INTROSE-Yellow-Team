@@ -142,8 +142,43 @@ public class PackagedImplementation implements PackagedInterface {
     }
 
     @Override
-    public void restockPackaged(PackagedBean pbean) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public void restockPackaged(int id, int quantity, double cost) {
+         try {
+            Connector c = new Connector();
+            Connection connection = c.getConnection();
+            PackagedBean temp = new PackagedBean();
+            int resultQuantity;
+            double resultCost;
+            
+            //first get the specific packaged to make calculations
+            String queryGetPackaged = "SELECT packaged_quantity, packaged_cost FROM packaged WHERE packaged_id =?"; 
+           
+            PreparedStatement ps1 = connection.prepareStatement(queryGetPackaged);
+            ps1.setInt(1, id);
+            ResultSet resultSet = ps1.executeQuery();
+            
+            while (resultSet.next()) {
+                temp.setPackaged_quantity(resultSet.getInt("packaged_quantity"));
+                temp.setPackaged_cost(resultSet.getDouble("packaged_cost"));
+                
+            }
+            
+            //CALCULATION
+            resultQuantity = quantity + temp.getPackaged_quantity();
+            resultCost = ((cost + temp.getPackaged_cost()) / 2);
+            
+            
+            //update the database
+            String query = "update packaged set packaged_quantity = ?, packaged_cost = ? where packaged_id =?";
+            PreparedStatement ps2 = connection.prepareStatement(query);
+            ps2.setDouble(1, resultQuantity);
+            ps2.setDouble(2, resultCost);
+            ps2.setInt(3, id);
+            ps2.executeUpdate();
+            
+        } catch (SQLException ex) {
+            Logger.getLogger(IngredientImplementation.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
     
     

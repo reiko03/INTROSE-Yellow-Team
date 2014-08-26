@@ -22,7 +22,7 @@ public interface PackagedInterface {
     
     public void editPackaged(int id, String name, double price, int threshold);
     
-    public void restockPackaged(PackagedBean pbean);
+    public void restockPackaged(int id, int quantity, double cost);
     
     public void removeDamaged(PackagedBean pbean);
     

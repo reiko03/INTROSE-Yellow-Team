@@ -86,7 +86,7 @@
 	    <td><%out.println(packlist.get(i).getPackaged_cost());%></td>
             <td><%out.println(packlist.get(i).getPackaged_price());%></td>
 		<td class="tableButton"><a href="#editPackaged" title="Edit" onclick="ajaxEditPackaged(<%=packlist.get(i).getPackaged_id()%>)"> Edit</a></td>
-		<td class="tableButton"><a href="#restockPackaged" title="Restock">+ Restock</a></td>
+		<td class="tableButton"><a href="#restockPackaged" title="Restock" onclick="ajaxRestockPackaged(<%=packlist.get(i).getPackaged_id()%>)">+ Restock</a></td>
 	  </tr>
           <% } %>
           
@@ -113,6 +113,33 @@
            packagedThreshold.value=data.PackagedThreshold;
            
            
+           
+        },
+
+        error: function(XMLHttpRequest, textStatus, exception) {
+            alert(XMLHttpRequest.responseText);
+        }
+    });}
+            </script>
+            
+            <script>
+           function ajaxRestockPackaged(id){
+
+             $.ajax({
+
+        url: "AjaxRestockPackagedServlet",
+
+        type: 'POST',
+
+        dataType: "json",
+
+        data: {
+            restockpackagedID : id
+        },
+
+        success: function (data) {
+           
+          restockpackagedID.value=data.RestockPackagedID;          
            
         },
 
@@ -193,12 +220,13 @@
 	  <div>
 	    <a class="right close button" href="#close" title="Close">X</a>
 	    <h3>Restock Packaged Item</h3>
-		<form id="restockPackagedForm">
+		<form action="RestockPackagedServlet" id="restockPackagedForm">
 		  <ul>
 		    <li id="restockPackagedName"><h4>Packaged Item</h4></li>
-		    <li>Restock Quantity: <input required type="text" name="restockQuantity"></li>
-		    <li>Restock Cost (per piece): <input required type="text" name="restockCost"></li>
-		    <li>Restock Source: <input required type="text" name="restockSource"></li>
+                    <input type="hidden" id="restockpackagedID" id="restockpackagedID" name="restockpackagedID">
+		    <li>Restock Quantity: <input required type="text" id="restockQuantity" name="restockQuantity"></li>
+		    <li>Restock Cost (per piece): <input required type="text" id="restockCost" name="restockCost"></li>
+		    <li>Restock Source: <input required type="text" id="restockSource" name="restockSource"></li>
 		  </ul>
 		  <br class="clear">
 		  <input type="submit" value="Submit">

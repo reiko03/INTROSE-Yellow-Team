@@ -22,7 +22,7 @@ public interface IngredientInterface {
     
     public void editIngredient(int id, String name, int threshold);
     
-    public void restockIngredient(IngredientBean ibean);
+    public void restockIngredient(int id, double weight, double cost);
     
     public void removeSpoiled(IngredientBean ibean);
     
