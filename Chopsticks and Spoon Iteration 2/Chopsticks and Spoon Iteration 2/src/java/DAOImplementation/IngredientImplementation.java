@@ -132,8 +132,39 @@ public class IngredientImplementation implements IngredientInterface {
     }
 
     @Override
-    public void removeSpoiled(IngredientBean ibean) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public void removeSpoiled(int id, double weight) {
+         try {
+            Connector c = new Connector();
+            Connection connection = c.getConnection();
+            IngredientBean temp = new IngredientBean();
+            double resultWeight;
+            
+            //first get the specific ingredient to make calculations
+            String queryGetIngredient = "SELECT ingredient_weight FROM ingredient WHERE ingredient_id =?"; 
+           
+            PreparedStatement ps1 = connection.prepareStatement(queryGetIngredient);
+            ps1.setInt(1, id);
+            ResultSet resultSet = ps1.executeQuery();
+            
+            while (resultSet.next()) {
+                temp.setIngredient_weight(resultSet.getDouble("ingredient_weight"));
+                
+            }
+            
+            //CALCULATION
+            resultWeight = temp.getIngredient_weight() - weight;
+            
+            
+            //update the database
+            String query = "update ingredient set ingredient_weight = ? where ingredient_id =?";
+            PreparedStatement ps2 = connection.prepareStatement(query);
+            ps2.setDouble(1, resultWeight);
+            ps2.setInt(2, id);
+            ps2.executeUpdate();
+            
+        } catch (SQLException ex) {
+            Logger.getLogger(IngredientImplementation.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     @Override

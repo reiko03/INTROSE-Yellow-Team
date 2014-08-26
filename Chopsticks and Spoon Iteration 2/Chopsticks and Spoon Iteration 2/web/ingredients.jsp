@@ -192,24 +192,23 @@
 	  </tr>-->
 	</table>
   </section>
+          
+          
   	<!--MODALS START-->
 	<div id="reportSpoiled" class="wrapModal">
 	  <div>
 	    <a class="right close button" href="#close" title="Close">X</a>
 	    <h3>Report Spoiled Ingredient</h3>
-		<form id="reportSpoiledForm">
+		<form action="ReportSpoiledIngredient" id="reportSpoiledForm">
 		  <ul>
 		  <li>Ingredient Name:
-		    <select>
-		      <option value="beef">Beef</option>
-		      <option value="carrots">Carrots</option>
-		      <option value="dory">Dory</option>
-		      <option value="potatoes">Potatoes</option>
-		      <option value="pancit bihon">Pancit Bihon</option>
-		      <option value="pancit miki">Pancit Miki</option>
+		    <select name="chooseIngredient">
+                      <%for(int j = 0; j < inglist.size(); j++){%>
+		      <option value="<%=inglist.get(j).getIngredient_id()%>"><%out.println(inglist.get(j).getIngredient_name());%></option>
+                      <%}%>
 		    </select>
 		  </li>
-		  <li>Weight (kg): <input required type="text" name="weight"></li>
+		  <li>Weight (kg): <input required type="text" id="spoiledWeight" name="spoiledWeight"></li>
 		  </ul>
 		  <br class="clear">
 		  <input type="submit" value="Submit">

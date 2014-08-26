@@ -24,7 +24,7 @@ public interface IngredientInterface {
     
     public void restockIngredient(int id, double weight, double cost);
     
-    public void removeSpoiled(IngredientBean ibean);
+    public void removeSpoiled(int id, double weight);
     
     public void addIngredientRestockLog(IngredientBean ibean, UsersBean user);
     

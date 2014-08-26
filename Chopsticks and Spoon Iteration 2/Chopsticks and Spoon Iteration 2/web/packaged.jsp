@@ -181,17 +181,16 @@
 	  <div>
 	    <a class="right close button" href="#close" title="Close">X</a>
 	    <h3>Report Damaged Packaged Item</h3>
-		<form id="reportDamagedForm">
+		<form action="ReportDamagedPackaged" id="reportDamagedForm">
 		  <ul>
 		  <li>Packaged Item:
-		    <select>
-		        <option value="c2 green 500ml">C2 Green 500ml</option>
-				<option value="mogu mogu 500ml">Mogu Mogu 500ml</option>
-				<option value="c2 red 1l">C2 Red 1L</option>
-				<option value="c2 red 500ml">C2 Red 500ml</option>
+		    <select name="choosePackaged">
+		        <%for(int j = 0; j < packlist.size(); j++){%>
+		      <option value="<%=packlist.get(j).getPackaged_id()%>"><%out.println(packlist.get(j).getPackaged_name());%></option>
+                      <%}%>
 			  </select>
 		  </li>
-		  <li>Damaged Quantity: <input required type="text" name="damageQuantity"></li>
+		  <li>Damaged Quantity: <input required type="text" id="damagedQuantity" name="damagedQuantity"></li>
 		  </ul>
 		  <br class="clear">
 		  <input type="submit" value="Submit">

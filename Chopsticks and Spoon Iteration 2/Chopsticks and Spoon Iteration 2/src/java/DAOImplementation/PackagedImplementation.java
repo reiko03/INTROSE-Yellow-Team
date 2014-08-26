@@ -137,8 +137,39 @@ public class PackagedImplementation implements PackagedInterface {
     }
 
     @Override
-    public void removeDamaged(PackagedBean pbean) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public void removeDamaged(int id, int quantity) {
+         try {
+            Connector c = new Connector();
+            Connection connection = c.getConnection();
+            PackagedBean temp = new PackagedBean();
+            int resultQuantity;
+            
+            //first get the specific packaged to make calculations
+            String queryGetPackaged = "SELECT packaged_quantity FROM packaged WHERE packaged_id =?"; 
+           
+            PreparedStatement ps1 = connection.prepareStatement(queryGetPackaged);
+            ps1.setInt(1, id);
+            ResultSet resultSet = ps1.executeQuery();
+            
+            while (resultSet.next()) {
+                temp.setPackaged_quantity(resultSet.getInt("packaged_quantity"));
+                
+            }
+            
+            //CALCULATION
+            resultQuantity = temp.getPackaged_quantity() - quantity;
+            
+            
+            //update the database
+            String query = "update packaged set packaged_quantity = ? where packaged_id =?";
+            PreparedStatement ps2 = connection.prepareStatement(query);
+            ps2.setDouble(1, resultQuantity);
+            ps2.setInt(2, id);
+            ps2.executeUpdate();
+            
+        } catch (SQLException ex) {
+            Logger.getLogger(IngredientImplementation.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     @Override

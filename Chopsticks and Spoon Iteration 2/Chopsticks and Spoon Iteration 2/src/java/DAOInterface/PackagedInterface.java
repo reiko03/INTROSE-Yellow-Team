@@ -24,7 +24,7 @@ public interface PackagedInterface {
     
     public void restockPackaged(int id, int quantity, double cost);
     
-    public void removeDamaged(PackagedBean pbean);
+    public void removeDamaged(int id, int quantity);
     
     public void addPackagedRestockLog(PackagedBean pbean, UsersBean user);
     
