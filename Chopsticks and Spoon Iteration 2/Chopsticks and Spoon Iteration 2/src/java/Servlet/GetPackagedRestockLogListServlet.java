@@ -6,13 +6,20 @@
 
 package Servlet;
 
+import Bean.IngredientBean;
+import Bean.IngredientRestockLogBean;
+import Bean.PackagedBean;
+import Bean.PackagedRestockLogBean;
+import Bean.UsersBean;
+import DAOImplementation.IngredientImplementation;
 import DAOImplementation.PackagedImplementation;
+import DAOImplementation.UserImplementation;
+import DAOInterface.IngredientInterface;
 import DAOInterface.PackagedInterface;
+import DAOInterface.UsersInterface;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.util.ArrayList;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -24,8 +31,8 @@ import javax.servlet.http.HttpSession;
  *
  * @author Keiko Nagano
  */
-@WebServlet(name = "RestockPackagedServlet", urlPatterns = {"/RestockPackagedServlet"})
-public class RestockPackagedServlet extends HttpServlet {
+@WebServlet(name = "GetPackagedRestockLogListServlet", urlPatterns = {"/GetPackagedRestockLogListServlet"})
+public class GetPackagedRestockLogListServlet extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -42,23 +49,37 @@ public class RestockPackagedServlet extends HttpServlet {
         PrintWriter out = response.getWriter();
         try {
             /* TODO output your page here. You may use following sample code. */
+            PackagedInterface packInterface = new PackagedImplementation();
+            UsersInterface userInterface = new UserImplementation();            
             HttpSession session = request.getSession();
-            DateFormat df = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
-            Date d = new Date();           
-            String date = df.format(d);
             
-            PackagedInterface pack = new PackagedImplementation();
-            int userid = (Integer)session.getAttribute("userID");
-            int packagedid = Integer.parseInt(request.getParameter("restockpackagedID"));
-            int quantity = Integer.parseInt(request.getParameter("restockQuantity"));
-            double cost = Double.parseDouble(request.getParameter("restockCost"));
-            String source = request.getParameter("restockSource");
+            ArrayList<PackagedRestockLogBean> packagedrestockloglist =  packInterface.getPackagedRestockLogList();
+            ArrayList<PackagedBean> packlist = packInterface.getPackagedList();
+            ArrayList<UsersBean> userlist = userInterface.getUsersList();
             
+            for(int i = 0; i < packagedrestockloglist.size(); i++){
+                int temppackagedid;
+                temppackagedid = packagedrestockloglist.get(i).getP_restock_packagedid();
+                
+                for(int j = 0; j < packlist.size(); j++){
+                    if(temppackagedid == packlist.get(j).getPackaged_id())
+                    packagedrestockloglist.get(i).setPackagedname(packlist.get(j).getPackaged_name());
+                }
+            }
             
-            pack.restockPackaged(packagedid, quantity, cost);
-            pack.addPackagedRestockLog(userid, packagedid, quantity, cost, date, source);
-          
-            response.sendRedirect("packaged.jsp");
+            for(int m = 0; m < packagedrestockloglist.size(); m++){
+                int tempuserid;
+                tempuserid = packagedrestockloglist.get(m).getP_restock_userid();
+                
+                for(int n = 0; n < userlist.size(); n++){
+                    if(tempuserid == userlist.get(n).getUser_id())
+                    packagedrestockloglist.get(m).setUsername(userlist.get(n).getUser_name());
+                }
+            }
+            
+           
+            session.setAttribute("packagedRestockLogList", packagedrestockloglist);
+            response.sendRedirect("logPackagedRestock.jsp");
         } finally {
             out.close();
         }

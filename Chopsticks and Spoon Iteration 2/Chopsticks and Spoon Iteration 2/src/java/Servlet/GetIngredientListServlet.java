@@ -43,8 +43,6 @@ public class GetIngredientListServlet extends HttpServlet {
             /* TODO output your page here. You may use following sample code. */
             IngredientInterface ingInterface = new IngredientImplementation();
             HttpSession session = request.getSession();
-           // AccountBean b = (AccountBean)session.getAttribute("sl");
-           // System.out.println(b.getUsername());
             
             ArrayList<IngredientBean> ib =  ingInterface.getIngredientList();
            

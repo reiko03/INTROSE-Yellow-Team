@@ -10,11 +10,15 @@ import DAOImplementation.PackagedImplementation;
 import DAOInterface.PackagedInterface;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 /**
  *
@@ -38,13 +42,23 @@ public class ReportDamagedPackaged extends HttpServlet {
         PrintWriter out = response.getWriter();
         try {
             /* TODO output your page here. You may use following sample code. */
+            HttpSession session = request.getSession();
+            DateFormat df = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+            Date d = new Date();          
+            String date = df.format(d);
+            
             PackagedInterface pack = new PackagedImplementation();
-            int id = Integer.parseInt(request.getParameter("choosePackaged"));
+            int userid = (Integer)session.getAttribute("userID");
+            int packagedid = Integer.parseInt(request.getParameter("choosePackaged"));
             int quantity = Integer.parseInt(request.getParameter("damagedQuantity"));
             
-            System.out.println("ingredient" +id);
+            System.out.println(userid);
+            System.out.println("packaged" + packagedid);
             System.out.println(quantity);
-            pack.removeDamaged(id, quantity);
+            System.out.println(date);
+            
+            pack.removeDamaged(packagedid, quantity);
+            pack.addDamageLog(userid, packagedid, quantity, date);
           
             response.sendRedirect("packaged.jsp");
         } finally {

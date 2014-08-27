@@ -16,6 +16,8 @@ public class DamageLogBean {
     private int damage_packagedid;
     private int damage_quantity;
     private String damage_datetime;
+    private String username;
+    private String packagedname;
 
     public String getDamage_datetime() {
         return damage_datetime;
@@ -55,6 +57,23 @@ public class DamageLogBean {
 
     public void setDamage_userid(int damage_userid) {
         this.damage_userid = damage_userid;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public String getPackagedname() {
+        return packagedname;
+    }
+
+    public void setPackagedname(String packagedname) {
+        this.packagedname = packagedname;
+    }
+    
+
+    public void setUsername(String username) {
+        this.username = username;
     }
     
     

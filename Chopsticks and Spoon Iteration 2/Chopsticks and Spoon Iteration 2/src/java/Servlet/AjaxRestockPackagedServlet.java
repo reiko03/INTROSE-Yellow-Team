@@ -47,7 +47,7 @@ public class AjaxRestockPackagedServlet extends HttpServlet {
             String packagedID = request.getParameter("restockpackagedID");
             PackagedInterface packagedDAO = new PackagedImplementation();
             PackagedBean packagedBean = packagedDAO.getPackaged(Integer.parseInt(packagedID));
-            System.out.println("it's this " + packagedID);
+            
              try {
                   obj.put("RestockPackagedID", packagedBean.getPackaged_id());
 

@@ -27,9 +27,25 @@ import java.util.logging.Logger;
 public class PackagedImplementation implements PackagedInterface {
 
     @Override
-    public void addDamageLog(PackagedBean pbean, UsersBean user) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public void addDamageLog(int user_id, int packaged_id, int quantity, String date) {
+        try {
+            Connector c = new Connector();
+            Connection connection = c.getConnection();
+            String query = "insert into damagelog(damage_userid, damage_packagedid, damage_quantity, damage_datetime) values (?, ?, ?, ?);";
+            
+            PreparedStatement ps = connection.prepareStatement(query);
+            ps.setInt(1, user_id);
+            ps.setInt(2, packaged_id);
+            ps.setInt(3, quantity);
+            ps.setString(4, date);
+            ps.executeUpdate();
+            
+        } catch (SQLException ex) {
+            Logger.getLogger(IngredientImplementation.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
+
+   
 
     @Override
     public void addPackaged(PackagedBean pbean) {
@@ -94,15 +110,56 @@ public class PackagedImplementation implements PackagedInterface {
         
         return packagedBean;
     }
-    
+
     @Override
-    public void addPackagedRestockLog(PackagedBean pbean, UsersBean user) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public void addPackagedRestockLog(int user_id, int packaged_id, int quantity, double cost, String date, String source) {
+        try {
+            Connector c = new Connector();
+            Connection connection = c.getConnection();
+            String query = "insert into packagedrestocklog(p_restock_userid, p_restock_packagedid, restock_quantity, restock_cost, restock_datetime, restock_source) values (?, ?, ?, ?, ?, ?);";
+            
+            PreparedStatement ps = connection.prepareStatement(query);
+            ps.setInt(1, user_id);
+            ps.setInt(2, packaged_id);
+            ps.setInt(3, quantity);
+            ps.setDouble(4, cost);
+            ps.setString(5, date);
+            ps.setString(6, source);
+            ps.executeUpdate();
+            
+        } catch (SQLException ex) {
+            Logger.getLogger(IngredientImplementation.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
+    
+   
 
     @Override
     public ArrayList<DamageLogBean> getDamageLogList() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        Connector connector = new Connector();
+            Connection connection = connector.getConnection();
+            ArrayList<DamageLogBean> damagelogBean = new ArrayList<DamageLogBean>();
+            String query = "SELECT * FROM damagelog";
+            
+            try {
+            PreparedStatement preparedStatement = connection.prepareCall(query);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            while (resultSet.next()) {
+                DamageLogBean temp = new DamageLogBean();
+                temp.setDamage_id(resultSet.getInt("damage_id"));
+                temp.setDamage_userid(resultSet.getInt("damage_userid"));
+                temp.setDamage_packagedid(resultSet.getInt("damage_packagedid"));
+                temp.setDamage_quantity(resultSet.getInt("damage_quantity"));
+                temp.setDamage_datetime(resultSet.getString("damage_datetime"));
+                
+                damagelogBean.add(temp);
+            }
+            
+        } catch (SQLException ex) {
+            Logger.getLogger(IngredientImplementation.class.getName()).log(Level.SEVERE, null, ex);
+        }
+            
+        return damagelogBean;
     }
 
     @Override
@@ -133,7 +190,29 @@ public class PackagedImplementation implements PackagedInterface {
 
     @Override
     public ArrayList<PackagedRestockLogBean> getPackagedRestockLogList() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        Connector connector = new Connector();
+        Connection connection = connector.getConnection();
+        ArrayList<PackagedRestockLogBean> packagedrestocklogBean = new ArrayList<PackagedRestockLogBean>();
+        String query = "SELECT * FROM packagedrestocklog";
+        try {
+            PreparedStatement preparedStatement = connection.prepareCall(query);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            while (resultSet.next()) {
+                PackagedRestockLogBean temp = new PackagedRestockLogBean();
+                temp.setP_restock_id(resultSet.getInt("p_restock_id"));
+                temp.setP_restock_userid(resultSet.getInt("p_restock_userid"));
+                temp.setP_restock_packagedid(resultSet.getInt("p_restock_packagedid"));
+                temp.setRestock_quantity(resultSet.getInt("restock_quantity"));
+                temp.setRestock_cost(resultSet.getDouble("restock_cost"));
+                temp.setRestock_datetime(resultSet.getString("restock_datetime"));
+                temp.setRestock_source(resultSet.getString("restock_source"));
+                
+                packagedrestocklogBean.add(temp);
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(IngredientImplementation.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return packagedrestocklogBean;
     }
 
     @Override

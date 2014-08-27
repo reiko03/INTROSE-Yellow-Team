@@ -16,6 +16,8 @@ public class SpoilLogBean {
     private int spoil_ingredientid;
     private double spoil_weight;
     private String spoil_datetime;
+    String username;
+    String ingredientname;
 
     public String getSpoil_datetime() {
         return spoil_datetime;
@@ -55,6 +57,22 @@ public class SpoilLogBean {
 
     public void setSpoil_weight(double spoil_weight) {
         this.spoil_weight = spoil_weight;
+    }
+
+    public String getIngredientname() {
+        return ingredientname;
+    }
+
+    public void setIngredientname(String ingredientname) {
+        this.ingredientname = ingredientname;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
     }
     
     

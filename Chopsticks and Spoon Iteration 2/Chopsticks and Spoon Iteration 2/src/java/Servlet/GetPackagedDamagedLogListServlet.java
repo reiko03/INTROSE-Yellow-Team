@@ -6,13 +6,16 @@
 
 package Servlet;
 
+import Bean.DamageLogBean;
+import Bean.PackagedBean;
+import Bean.UsersBean;
 import DAOImplementation.PackagedImplementation;
+import DAOImplementation.UserImplementation;
 import DAOInterface.PackagedInterface;
+import DAOInterface.UsersInterface;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.util.ArrayList;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -24,8 +27,8 @@ import javax.servlet.http.HttpSession;
  *
  * @author Keiko Nagano
  */
-@WebServlet(name = "RestockPackagedServlet", urlPatterns = {"/RestockPackagedServlet"})
-public class RestockPackagedServlet extends HttpServlet {
+@WebServlet(name = "GetPackagedDamagedLogListServlet", urlPatterns = {"/GetPackagedDamagedLogListServlet"})
+public class GetPackagedDamagedLogListServlet extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -42,23 +45,37 @@ public class RestockPackagedServlet extends HttpServlet {
         PrintWriter out = response.getWriter();
         try {
             /* TODO output your page here. You may use following sample code. */
+            PackagedInterface packInterface = new PackagedImplementation();
+            UsersInterface userInterface = new UserImplementation();            
             HttpSession session = request.getSession();
-            DateFormat df = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
-            Date d = new Date();           
-            String date = df.format(d);
             
-            PackagedInterface pack = new PackagedImplementation();
-            int userid = (Integer)session.getAttribute("userID");
-            int packagedid = Integer.parseInt(request.getParameter("restockpackagedID"));
-            int quantity = Integer.parseInt(request.getParameter("restockQuantity"));
-            double cost = Double.parseDouble(request.getParameter("restockCost"));
-            String source = request.getParameter("restockSource");
+            ArrayList<DamageLogBean> damageloglist =  packInterface.getDamageLogList();
+            ArrayList<PackagedBean> packlist = packInterface.getPackagedList();
+            ArrayList<UsersBean> userlist = userInterface.getUsersList();
             
+            for(int i = 0; i < damageloglist.size(); i++){
+                int temppackagedid;
+                temppackagedid = damageloglist.get(i).getDamage_packagedid();
+                
+                for(int j = 0; j < packlist.size(); j++){
+                    if(temppackagedid == packlist.get(j).getPackaged_id())
+                    damageloglist.get(i).setPackagedname(packlist.get(j).getPackaged_name());
+                }
+            }
             
-            pack.restockPackaged(packagedid, quantity, cost);
-            pack.addPackagedRestockLog(userid, packagedid, quantity, cost, date, source);
-          
-            response.sendRedirect("packaged.jsp");
+            for(int m = 0; m < damageloglist.size(); m++){
+                int tempuserid;
+                tempuserid = damageloglist.get(m).getDamage_userid();
+                
+                for(int n = 0; n < userlist.size(); n++){
+                    if(tempuserid == userlist.get(n).getUser_id())
+                    damageloglist.get(m).setUsername(userlist.get(n).getUser_name());
+                }
+            }
+            
+           
+            session.setAttribute("damageLogList", damageloglist);
+            response.sendRedirect("logPackagedDamage.jsp");
         } finally {
             out.close();
         }

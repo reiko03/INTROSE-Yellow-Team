@@ -1,3 +1,4 @@
+<%@page import="Bean.UsersBean"%>
 <%@page import="Bean.PackagedBean"%>
 <%@page import="java.util.ArrayList"%>
 <!DOCTYPE html>
@@ -11,18 +12,20 @@
   <meta name="description" content="">
   <meta name="author" content="">  
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <script src="bootstrap/js/jquery-2.1.1.js"></script>
+  <script src="bootstrap/js/jquery.min.js"></script>
   <link rel="stylesheet" href="css/style.css">
   <link rel="icon" href="images/favicon.ico">
 </head>
 <body id="body_packaged">
   <div class="wrap">
+      <% UsersBean useraccount = new UsersBean();
+            useraccount = (UsersBean)session.getAttribute("userAccount");%>
   <!--SIDENAV START-->
   <div class="wrapSideNav">
     <div class="sideNav">
 	  <div class="userProfile">
-	    <span class="username">Username</span>
-		<span class="position">Position</span>
+	    <span class="username"><%out.println(useraccount.getUser_name());%></span>
+		<span class="position"><%out.println(useraccount.getUser_level());%></span>
 	  </div>
 	  <ul>
 	    <li class="nav_pos"><a href="pos.html" title="Point of Sales">Point of Sales</a></li>
@@ -41,11 +44,11 @@
 	  </hgroup>
       <div class="subMenu">
 	    <ul>
-          <li><a href="dishes.html" title="Manage Dishes">Dishes <span>1</span></a></li>
+          <li><a href="dishes.jsp" title="Manage Dishes">Dishes <span>1</span></a></li>
 		  <li><a href="users.jsp" title="Manage Users">Users</a></li>
-		  <li><a href="logIngredientRestock.html" title="View Logs">View Logs</a></li>
-		  <li><a href="" title="Log Out">Log Out</a></li>
-		  <li id="dateTime">DATE / TIME</li>
+		  <li><a href="GetIngredientRestockLogListServlet" title="View Logs">View Logs</a></li>
+		  <li><a href="index.jsp" title="Log Out">Log Out</a></li>
+		  <li id="dateTime"><%= new java.util.Date() %></li>
 	    </ul>
       </div>
     <br class="clear">

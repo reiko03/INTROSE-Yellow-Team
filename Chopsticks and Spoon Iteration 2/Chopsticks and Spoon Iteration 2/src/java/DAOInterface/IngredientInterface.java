@@ -26,13 +26,13 @@ public interface IngredientInterface {
     
     public void removeSpoiled(int id, double weight);
     
-    public void addIngredientRestockLog(IngredientBean ibean, UsersBean user);
+    public void addIngredientRestockLog(int user_id, int ingredient_id, double weight, double cost, String date, String source);
     
     public IngredientBean getIngredient(int ingredientID);
     
     public ArrayList<IngredientRestockLogBean> getIngredientRestockLogList();
     
-    public void addSpoilLog(IngredientBean ibean, UsersBean user);
+    public void addSpoilLog(int user_id, int ingredient_id, double weight, String date);
     
     public ArrayList<SpoilLogBean> getSpoilLogList();
     

@@ -26,13 +26,13 @@ public interface PackagedInterface {
     
     public void removeDamaged(int id, int quantity);
     
-    public void addPackagedRestockLog(PackagedBean pbean, UsersBean user);
+    public void addPackagedRestockLog(int user_id, int packaged_id, int quantity, double cost, String date, String source);
     
     public ArrayList<PackagedRestockLogBean> getPackagedRestockLogList();
     
     public PackagedBean getPackaged(int packagedID);
     
-    public void addDamageLog(PackagedBean pbean, UsersBean user);
+    public void addDamageLog(int user_id, int packaged_id, int quantity, String date);
     
     public ArrayList<DamageLogBean> getDamageLogList();
     

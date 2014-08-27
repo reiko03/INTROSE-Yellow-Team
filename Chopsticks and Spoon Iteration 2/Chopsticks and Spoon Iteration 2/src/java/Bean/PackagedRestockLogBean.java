@@ -18,6 +18,8 @@ public class PackagedRestockLogBean {
     private double restock_cost;
     private String restock_datetime;
     private String restock_source;
+    private String username;
+    private String packagedname;
 
     public int getP_restock_id() {
         return p_restock_id;
@@ -73,6 +75,22 @@ public class PackagedRestockLogBean {
 
     public void setRestock_source(String restock_source) {
         this.restock_source = restock_source;
+    }
+
+    public String getPackagedname() {
+        return packagedname;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setPackagedname(String packagedname) {
+        this.packagedname = packagedname;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
     }
     
     

@@ -6,8 +6,11 @@
 
 package Servlet;
 
+import Bean.IngredientBean;
 import Bean.UsersBean;
+import DAOImplementation.IngredientImplementation;
 import DAOImplementation.UserImplementation;
+import DAOInterface.IngredientInterface;
 import DAOInterface.UsersInterface;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -41,10 +44,21 @@ public class LoginServlet extends HttpServlet {
         PrintWriter out = response.getWriter();
         try {
             /* TODO output your page here. You may use following sample code. */
+           IngredientInterface ingInterface = new IngredientImplementation();
            UsersInterface account = new UserImplementation();
+           HttpSession session = request.getSession();
+           UsersBean user = new UsersBean();
           
            if(account.userLogin(request.getParameter("username"), request.getParameter("password")))
-                response.sendRedirect("dishes.jsp");
+           {
+               ArrayList<IngredientBean> ib =  ingInterface.getIngredientList();
+            session.setAttribute("ingredientlist", ib);
+            user = account.getUser(request.getParameter("username"));
+            session.setAttribute("userAccount", user);
+            session.setAttribute("userID", user.getUser_id());
+            session.setAttribute("userName", user.getUser_name());
+               response.sendRedirect("dishes.jsp");
+           } 
            else{
                out.println("<script>alert('Login fail.')</script>");
                out.println("<script>window.location='index.jsp'</script>");

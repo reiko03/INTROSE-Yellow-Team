@@ -85,17 +85,48 @@ public class IngredientImplementation implements IngredientInterface {
         
         return ingredientBean;
     }
+
+    @Override
+    public void addIngredientRestockLog(int user_id, int ingredient_id, double weight, double cost, String date, String source) {
+       try {
+            Connector c = new Connector();
+            Connection connection = c.getConnection();
+            String query = "insert into ingredientrestocklog(restock_userid, restock_ingredientid, restock_weight, restock_cost, restock_datetime, restock_source) values (?, ?, ?, ?, ?, ?);";
+            
+            PreparedStatement ps = connection.prepareStatement(query);
+            ps.setInt(1, user_id);
+            ps.setInt(2, ingredient_id);
+            ps.setDouble(3, weight);
+            ps.setDouble(4, cost);
+            ps.setString(5, date);
+            ps.setString(6, source);
+            ps.executeUpdate();
+            
+        } catch (SQLException ex) {
+            Logger.getLogger(IngredientImplementation.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    @Override
+    public void addSpoilLog(int user_id, int ingredient_id, double weight, String date) {
+        try {
+            Connector c = new Connector();
+            Connection connection = c.getConnection();
+            String query = "insert into spoillog(spoil_userid, spoil_ingredientid, spoil_weight, spoil_datetime) values (?, ?, ?, ?);";
+            
+            PreparedStatement ps = connection.prepareStatement(query);
+            ps.setInt(1, user_id);
+            ps.setInt(2, ingredient_id);
+            ps.setDouble(3, weight);
+            ps.setString(4, date);
+            ps.executeUpdate();
+            
+        } catch (SQLException ex) {
+            Logger.getLogger(IngredientImplementation.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
     
-    @Override
-    public void addIngredientRestockLog(IngredientBean ibean, UsersBean user) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public void addSpoilLog(IngredientBean ibean, UsersBean user) {
-       
-    }
-
+    
     @Override
     public ArrayList<IngredientBean> getIngredientList() {
         Connector connector = new Connector();
@@ -123,12 +154,62 @@ public class IngredientImplementation implements IngredientInterface {
 
     @Override
     public ArrayList<IngredientRestockLogBean> getIngredientRestockLogList() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+            Connector connector = new Connector();
+            Connection connection = connector.getConnection();
+            ArrayList<IngredientRestockLogBean> ingredientrestocklogBean = new ArrayList<IngredientRestockLogBean>();
+            String query = "SELECT * FROM ingredientrestocklog"; 
+            
+            try {
+            PreparedStatement preparedStatement = connection.prepareCall(query);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            while (resultSet.next()) {
+                IngredientRestockLogBean temp = new IngredientRestockLogBean();
+                temp.setI_restock_id(resultSet.getInt("i_restock_id"));
+                temp.setI_restock_userid(resultSet.getInt("restock_userid"));
+                temp.setI_restock_ingredientid(resultSet.getInt("restock_ingredientid"));
+                temp.setRestock_weight(resultSet.getDouble("restock_weight"));
+                temp.setRestock_cost(resultSet.getDouble("restock_cost"));
+                temp.setRestock_datetime(resultSet.getString("restock_datetime"));
+                temp.setRestock_source(resultSet.getString("restock_source"));
+                
+                ingredientrestocklogBean.add(temp);
+            }
+            
+        } catch (SQLException ex) {
+            Logger.getLogger(IngredientImplementation.class.getName()).log(Level.SEVERE, null, ex);
+        }
+            
+        
+        return ingredientrestocklogBean;
     }
 
     @Override
     public ArrayList<SpoilLogBean> getSpoilLogList() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        Connector connector = new Connector();
+            Connection connection = connector.getConnection();
+            ArrayList<SpoilLogBean> ingredientspoillogBean = new ArrayList<SpoilLogBean>();
+            String query = "SELECT * FROM spoillog"; 
+            
+            try {
+            PreparedStatement preparedStatement = connection.prepareCall(query);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            while (resultSet.next()) {
+                SpoilLogBean temp = new SpoilLogBean();
+                temp.setSpoil_id(resultSet.getInt("spoil_id"));
+                temp.setSpoil_userid(resultSet.getInt("spoil_userid"));
+                temp.setSpoil_ingredientid(resultSet.getInt("spoil_ingredientid"));
+                temp.setSpoil_weight(resultSet.getDouble("spoil_weight"));
+                temp.setSpoil_datetime(resultSet.getString("spoil_datetime"));
+                
+                ingredientspoillogBean.add(temp);
+            }
+            
+        } catch (SQLException ex) {
+            Logger.getLogger(IngredientImplementation.class.getName()).log(Level.SEVERE, null, ex);
+        }
+            
+        
+        return ingredientspoillogBean;
     }
 
     @Override

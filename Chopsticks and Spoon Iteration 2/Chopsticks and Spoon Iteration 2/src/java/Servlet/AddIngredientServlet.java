@@ -39,6 +39,7 @@ public class AddIngredientServlet extends HttpServlet {
         PrintWriter out = response.getWriter();
         try {
             /* TODO output your page here. You may use following sample code. */
+           
            String tempweight;
            double weight;
            String tempcost;
@@ -67,7 +68,10 @@ public class AddIngredientServlet extends HttpServlet {
            
           //HttpSession session = request.getSession();
                 // session.setAttribute("sh",sh);
-                 response.sendRedirect("ingredients.jsp");
+            out.println("<script>alert('Successfully created new ingredient!')</script>");
+            out.println("<script>window.location='ingredients.jsp'</script>");
+            response.sendRedirect("ingredients.jsp");
+          
         } finally {
             out.close();
         }

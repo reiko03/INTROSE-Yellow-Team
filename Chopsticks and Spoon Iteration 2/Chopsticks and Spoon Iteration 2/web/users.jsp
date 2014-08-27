@@ -17,12 +17,14 @@
 </head>
 <body id="body_users">
   <div class="wrap">
+      <% UsersBean useraccount = new UsersBean();
+            useraccount = (UsersBean)session.getAttribute("userAccount");%>
   <!--SIDENAV START-->
   <div class="wrapSideNav">
     <div class="sideNav">
 	  <div class="userProfile">
-	    <span class="username">Username</span>
-		<span class="position">Position</span>
+	   <span class="username"><%out.println(useraccount.getUser_name());%></span>
+		<span class="position"><%out.println(useraccount.getUser_level());%></span>
 	  </div>
 	  <ul>
 	    <li class="nav_pos"><a href="pos.jsp" title="Point of Sales">Point of Sales</a></li>
@@ -43,9 +45,9 @@
 	    <ul>
 	      <li><a href="dishes.jsp" title="Manage Dishes">Dishes <span>1</span></a></li>
 		  <li><a href="users.jsp" title="Manage Users">Users</a></li>
-		  <li><a href="logIngredientRestock.jsp" title="View  Logs">View  Logs</a></li>
-		  <li><a href="" title="Log Out">Log Out</a></li>
-		  <li id="dateTime">DATE / TIME</li>
+		  <li><a href="GetIngredientRestockLogListServlet" title="View  Logs">View  Logs</a></li>
+		  <li><a href="index.jsp" title="Log Out">Log Out</a></li>
+		  <li id="dateTime"><%= new java.util.Date() %></li>
 	    </ul>
       </div>
     <br class="clear">

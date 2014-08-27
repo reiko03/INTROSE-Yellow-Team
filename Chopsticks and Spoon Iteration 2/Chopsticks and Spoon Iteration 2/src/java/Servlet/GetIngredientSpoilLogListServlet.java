@@ -6,13 +6,16 @@
 
 package Servlet;
 
-import DAOImplementation.PackagedImplementation;
-import DAOInterface.PackagedInterface;
+import Bean.IngredientBean;
+import Bean.SpoilLogBean;
+import Bean.UsersBean;
+import DAOImplementation.IngredientImplementation;
+import DAOImplementation.UserImplementation;
+import DAOInterface.IngredientInterface;
+import DAOInterface.UsersInterface;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.util.ArrayList;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -24,8 +27,8 @@ import javax.servlet.http.HttpSession;
  *
  * @author Keiko Nagano
  */
-@WebServlet(name = "RestockPackagedServlet", urlPatterns = {"/RestockPackagedServlet"})
-public class RestockPackagedServlet extends HttpServlet {
+@WebServlet(name = "GetIngredientSpoilLogListServlet", urlPatterns = {"/GetIngredientSpoilLogListServlet"})
+public class GetIngredientSpoilLogListServlet extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -42,23 +45,37 @@ public class RestockPackagedServlet extends HttpServlet {
         PrintWriter out = response.getWriter();
         try {
             /* TODO output your page here. You may use following sample code. */
+            IngredientInterface ingInterface = new IngredientImplementation();
+            UsersInterface userInterface = new UserImplementation();            
             HttpSession session = request.getSession();
-            DateFormat df = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
-            Date d = new Date();           
-            String date = df.format(d);
             
-            PackagedInterface pack = new PackagedImplementation();
-            int userid = (Integer)session.getAttribute("userID");
-            int packagedid = Integer.parseInt(request.getParameter("restockpackagedID"));
-            int quantity = Integer.parseInt(request.getParameter("restockQuantity"));
-            double cost = Double.parseDouble(request.getParameter("restockCost"));
-            String source = request.getParameter("restockSource");
+            ArrayList<SpoilLogBean> spoilloglist =  ingInterface.getSpoilLogList();
+            ArrayList<IngredientBean> inglist = ingInterface.getIngredientList();
+            ArrayList<UsersBean> userlist = userInterface.getUsersList();
             
+            for(int i = 0; i < spoilloglist.size(); i++){
+                int tempingredientid;
+                tempingredientid = spoilloglist.get(i).getSpoil_ingredientid();
+                
+                for(int j = 0; j < inglist.size(); j++){
+                    if(tempingredientid == inglist.get(j).getIngredient_id())
+                    spoilloglist.get(i).setIngredientname(inglist.get(j).getIngredient_name());
+                }
+            }
             
-            pack.restockPackaged(packagedid, quantity, cost);
-            pack.addPackagedRestockLog(userid, packagedid, quantity, cost, date, source);
-          
-            response.sendRedirect("packaged.jsp");
+            for(int m = 0; m < spoilloglist.size(); m++){
+                int tempuserid;
+                tempuserid = spoilloglist.get(m).getSpoil_userid();
+                
+                for(int n = 0; n < userlist.size(); n++){
+                    if(tempuserid == userlist.get(n).getUser_id())
+                    spoilloglist.get(m).setUsername(userlist.get(n).getUser_name());
+                }
+            }
+            
+           
+            session.setAttribute("spoilLogList", spoilloglist);
+            response.sendRedirect("logIngredientSpoil.jsp");
         } finally {
             out.close();
         }

@@ -125,15 +125,16 @@ public class UserImplementation implements UsersInterface {
         UsersBean userBean;
         Connector c = new Connector();
         Connection connection = c.getConnection();
-        String query = "SELECT user_name, user_password,user_level FROM users";
+        String query = "SELECT user_id, user_name, user_password, user_level FROM users";
         try{
          PreparedStatement ps = connection.prepareStatement(query);
         ResultSet rs = ps.executeQuery();
          while (rs.next()) {
             userBean = new UsersBean();
-            userBean.setUser_name(rs.getString(1));
-            userBean.setUser_password(rs.getString(2));
-            userBean.setUser_level(rs.getString(3));
+            userBean.setUser_id(rs.getInt(1));
+            userBean.setUser_name(rs.getString(2));
+            userBean.setUser_password(rs.getString(3));
+            userBean.setUser_level(rs.getString(4));
             userList.add(userBean);
          }
          
