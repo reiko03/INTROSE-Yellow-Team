@@ -6,26 +6,23 @@
 
 package Servlet;
 
-import DAOImplementation.PackagedImplementation;
-import DAOInterface.PackagedInterface;
+import Bean.DishBean;
+import DAOImplementation.DishImplementation;
+import DAOInterface.DishInterface;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 
 /**
  *
- * @author Keiko Nagano
+ * @author Drian
  */
-@WebServlet(name = "RestockPackagedServlet", urlPatterns = {"/RestockPackagedServlet"})
-public class RestockPackagedServlet extends HttpServlet {
+@WebServlet(name = "AddDishServlet", urlPatterns = {"/AddDishServlet"})
+public class AddDishServlet extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -42,23 +39,21 @@ public class RestockPackagedServlet extends HttpServlet {
         PrintWriter out = response.getWriter();
         try {
             /* TODO output your page here. You may use following sample code. */
-            HttpSession session = request.getSession();
-            DateFormat df = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
-            Date d = new Date();           
-            String date = df.format(d);
-            
-            PackagedInterface pack = new PackagedImplementation();
-            int userid = (Integer)session.getAttribute("userID");
-            int packagedid = Integer.parseInt(request.getParameter("restockpackagedID"));
-            int quantity = Integer.parseInt(request.getParameter("restockQuantity"));
-            double cost = Double.parseDouble(request.getParameter("restockCost"));
-            String source = request.getParameter("restockSource");
-            
-            
-            pack.restockPackaged(packagedid, quantity, cost);
-            pack.addPackagedRestockLog(userid, packagedid, quantity, cost, date, source);
+           DishBean dishBean = new DishBean();
+           DishInterface dishDAO = new DishImplementation();
+           
+           String dishName = request.getParameter("dishName");
+           String dishPrice = request.getParameter("dishPrice");
+              String x = request.getParameter("ingredientNumbers");
+            String[] ingredientNumbers = x.split(",");
+          String totalDishPrice = request.getParameter("recipeTotal");
           
-            response.sendRedirect("packaged.jsp#successRestock");
+          dishBean.setDish_name(dishName);
+          dishBean.setDish_cost(Double.parseDouble(dishPrice));
+          dishBean.setDish_price(Double.parseDouble(totalDishPrice));
+          
+          dishDAO.addDish(dishBean);
+          response.sendRedirect("dishes.jsp");
         } finally {
             out.close();
         }

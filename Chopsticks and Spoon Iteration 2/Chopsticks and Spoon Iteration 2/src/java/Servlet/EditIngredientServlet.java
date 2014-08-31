@@ -48,7 +48,7 @@ public class EditIngredientServlet extends HttpServlet {
             System.out.println(threshold);
             in.editIngredient(id, name, threshold);
           
-            response.sendRedirect("ingredients.jsp");
+            response.sendRedirect("ingredients.jsp#successEdit");
         } finally {
             out.close();
         }

@@ -22,7 +22,21 @@ public class DishImplementation implements DAOInterface.DishInterface{
 
     @Override
     public void addDish(DishBean dbean) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+         Connector c = new Connector();
+            Connection connection = c.getConnection();
+            String query = "insert into dish(dish_id, dish_name, dish_cost, dish_price) values (null, ?, ?, ?);";
+            try{
+                PreparedStatement ps = connection.prepareStatement(query);
+                ps.setString(1, dbean.getDish_name());
+                ps.setDouble(2, dbean.getDish_cost());
+                ps.setDouble(3, dbean.getDish_price());
+                ps.executeUpdate();
+                
+            }catch(SQLException exc){
+                
+               
+            }
+            
     }
 
     @Override

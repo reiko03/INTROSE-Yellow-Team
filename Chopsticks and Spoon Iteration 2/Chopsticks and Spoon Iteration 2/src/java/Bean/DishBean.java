@@ -6,6 +6,8 @@
 
 package Bean;
 
+import java.util.ArrayList;
+
 /**
  *
  * @author Keiko Nagano
@@ -15,7 +17,18 @@ public class DishBean {
     private String dish_name;
     private double dish_cost;
     private double dish_price;
+    private ArrayList<IngredientBean> ingredientList;
 
+    
+    public void setIngredientList(ArrayList<IngredientBean> ingredientList) {
+        this.ingredientList = ingredientList;
+    }
+    
+    public ArrayList<IngredientBean> getIngredientList() {
+        return ingredientList;
+    }
+
+    
     public double getDish_cost() {
         return dish_cost;
     }

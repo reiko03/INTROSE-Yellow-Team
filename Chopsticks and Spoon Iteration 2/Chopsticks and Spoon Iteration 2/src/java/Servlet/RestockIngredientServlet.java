@@ -59,8 +59,9 @@ public class RestockIngredientServlet extends HttpServlet {
             
             in.restockIngredient(ingredientid, weight, cost);
             in.addIngredientRestockLog(userid, ingredientid, weight, cost, date, source);
-          
-            response.sendRedirect("ingredients.jsp");
+            
+            //out.println("<script>document.getElementById('refresh').className += 'buttonRefresh'</script>");
+            response.sendRedirect("ingredients.jsp#successRestock");
         } finally {
             out.close();
         }

@@ -63,8 +63,8 @@
 	    <li class="logNav_ingredientSpoil"><a href="GetIngredientSpoilLogListServlet" title="Ingredient Spoil Log">Ingredient Spoil</a></li>
 	    <li class="logNav_packagedRestock"><a href="GetPackagedRestockLogListServlet" title="Packaged Restock Log">Packaged Restock</a></li>
 	    <li class="logNav_packagedDamage"><a href="GetPackagedDamagedLogListServlet" title="Packaged Damage Log">Packaged Damage</a></li>
-	    <li class="logNav_dishSale"><a href="logDishSale.html" title="Dish Sale Log">Dish Sale</a></li>
-	    <li class="logNav_packagedSale"><a href="logPackagedSale.html" title="Packaged Sale Log">Packaged Sale</a></li>
+	    <li class="logNav_dishSale"><a href="logDishSale.jsp" title="Dish Sale Log">Dish Sale</a></li>
+	    <li class="logNav_packagedSale"><a href="logPackagedSale.jsp" title="Packaged Sale Log">Packaged Sale</a></li>
 	  </ul>
 	</div>
 	<table>

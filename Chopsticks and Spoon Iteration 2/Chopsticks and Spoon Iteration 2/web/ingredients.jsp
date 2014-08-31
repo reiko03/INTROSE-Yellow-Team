@@ -16,6 +16,7 @@
   <link rel="stylesheet" href="css/style.css">
   <link rel="icon" href="images/favicon.ico">
 </head>
+
 <body id="body_ingredient">
   <div class="wrap">
       <% UsersBean useraccount = new UsersBean();
@@ -28,7 +29,7 @@
 		<span class="position"><%out.println(useraccount.getUser_level());%></span>
 	  </div>
 	  <ul>
-	    <li class="nav_pos"><a href="pos.html" title="Point of Sales">Point of Sales</a></li>
+	    <li class="nav_pos"><a href="pos.jsp" title="Point of Sales">Point of Sales</a></li>
 	    <li class="nav_ingredients"><a href="GetIngredientListServlet" title="Ingredients">Ingredients <span>2</span></a></li>
 	    <li class="nav_packaged"><a href="GetPackagedListServlet" title="Pacakaged Items">Packaged Items <span>1</span></a></li>
       </ul>
@@ -56,17 +57,13 @@
   <!--HEADER END-->
   </div>
   <!--CONTENT START-->
+  
   <section class="wrapContent">
     <h1>Ingredients</h1>
-	<div class="left">
-	  <form id="searchIngredient" class="search">
-	    <input type="search" name="search" placeholder="Search..">
-		<input type="submit" value="Search">
-                
-	  </form>
-	</div>
+          
 	<div class="right">
-		<a class="button left" href="GetIngredientListServlet" title="Refresh">Refresh</a>
+            
+          <a id="refresh" class="button left" href="GetIngredientListServlet" title="Refresh">Refresh</a>
 	  <a class="button left" href="#reportSpoiled" title="Report Spoiled">Report Spoiled</a>
 	  <a class="button left" href="#createIngredient" title="Create New Ingredient">Create New Ingredient</a>
 	</div>
@@ -154,6 +151,36 @@
           
           
   	<!--MODALS START-->
+        <div id="successEdit" class="wrapModal">
+	   <div class="alert alert-warning alert-dismissible" role="alert">
+  <a class="right close button" href="#close" data-dismiss="alert" title="Close">X</a>
+  <strong><font color="green">Success!</font></strong> <font color="black">You have just successfully edited an ingredient!</font>
+</div>
+</div>
+        <div id="successReport" class="wrapModal">
+	   <div class="alert alert-warning alert-dismissible" role="alert">
+  <a class="right close button" href="#close" data-dismiss="alert" title="Close">X</a>
+  <strong><font color="green">Success!</font></strong> <font color="black">You have just successfully reported a spoiled ingredient!</font>
+</div>
+</div>
+        <div id="successCreate" class="wrapModal">
+	   <div class="alert alert-warning alert-dismissible" role="alert">
+  <a class="right close button" href="#close" data-dismiss="alert" title="Close">X</a>
+  <strong><font color="green">Success!</font></strong> <font color="black">You have just successfully created an ingredient!</font>
+</div>
+</div>
+        <div id="successRestock" class="wrapModal">
+	   <div class="alert alert-warning alert-dismissible" role="alert">
+  <a class="right close button" href="#close" data-dismiss="alert" title="Close">X</a>
+  <strong><font color="green">Success!</font></strong> <font color="black">You have just successfully restocked an ingredient!</font>
+</div>
+</div>
+         <div id="failCreate" class="wrapModal">
+	   <div class="alert alert-warning alert-dismissible" role="alert">
+  <a class="right close button" href="#close" data-dismiss="alert" title="Close">X</a>
+  <strong><font color="red">Error!</font></strong> <font color="black">Unsuccessfully created an ingredient! (*Name must be unique)</font>
+</div>
+</div>
 	<div id="reportSpoiled" class="wrapModal">
 	  <div>
 	    <a class="right close button" href="#close" title="Close">X</a>
@@ -167,7 +194,7 @@
                       <%}%>
 		    </select>
 		  </li>
-		  <li>Weight (kg): <input required type="text" id="spoiledWeight" name="spoiledWeight"></li>
+		  <li>Weight (kg): <input required type="text" pattern="^\d*\.?\d*$" id="spoiledWeight" name="spoiledWeight" oninput="check(this)"></li>
 		  </ul>
 		  <br class="clear">
 		  <input type="submit" value="Submit">
@@ -180,11 +207,11 @@
 	    <h3>Create New Ingredient</h3>
 		<form action="AddIngredientServlet" id="createIngredientForm" method="POST">
 		  <ul>
-		    <li>Ingredient Name: <input required type="text" name="ingredientName"></li>
-		    <li>Ingredient Weight (kg): <input required type="text" name="ingredientWeight"></li>
-		    <li>Ingredient Cost: <input required type="text" name="ingredientCost"></li>
+		    <li>Ingredient Name: <input required type="text" pattern="^[a-zA-Z\s]*$" name="ingredientName" oninput="check(this)"></li>
+		    <li>Ingredient Weight (kg): <input required type="text" pattern="^\d*\.?\d*$" name="ingredientWeight" oninput="check(this)"></li>
+		    <li>Ingredient Cost: <input required type="text" pattern="^\d*\.?\d*$" name="ingredientCost" oninput="check(this)"></li>
 			<!--<li>Ingredient Source: <input required type="text" name="ingredientSource"></li>-->
-		    <li>Weight Threshold: <input required type="text" name="ingredientThreshold"></li>
+		    <li>Weight Threshold: <input required type="text" pattern="^\d*\.?\d*$" name="ingredientThreshold" oninput="check(this)"></li>
 		  </ul>
 		  <br class="clear">
 		  <input type="submit" value="Submit">
@@ -200,7 +227,7 @@
                       <li id="editIngredientName"><h4> Ingredient Info </h4></li>
                       <input type="hidden" id="ingredientID" name="ingredientID">
 		    <li>New Ingredient Name: <input required type="text" id="ingredientName" name="ingredientName"></li>
-		    <li>New Ingredient Threshold: <input required type="text" id="ingredientThreshold" name="ingredientThreshold"></li>		    
+		    <li>New Ingredient Threshold: <input required type="text" pattern="^\d*\.?\d*$" id="ingredientThreshold" name="ingredientThreshold" oninput="check(this)"></li>		    
 		  </ul>
 		  <br class="clear">
 		  <input type="submit" value="Submit">
@@ -215,8 +242,8 @@
 		  <ul>
 		    <li id="restockIngredientName"><h4>Ingredient Name</h4></li>
                     <input type="hidden" id="restockingredientID" name="restockingredientID">
-		    <li>Restock Weight (kg): <input required type="text" id="restockWeight" name="restockWeight"></li>
-		    <li>Restock Cost: <input required type="text" id="restockCost" name="restockCost"></li>
+		    <li>Restock Weight (kg): <input required type="text" pattern="^[1-9][0-9]*?$" id="restockWeight" name="restockWeight" oninput="check(this)"></li>
+		    <li>Restock Cost: <input required type="text" pattern="^\d*\.?\d*$" id="restockCost" name="restockCost" oninput="check(this)"></li>
 		    <li>Restock Source: <input required type="text" id="restockSource" name="restockSource"></li>
 		  </ul>
 		  <br class="clear">
@@ -224,6 +251,16 @@
 		</form>
 	  </div>
 	</div>
+         <script>
+          function check(input) {  
+                if(input.validity.patternMismatch){  
+                input.setCustomValidity("Please enter a valid input.");  
+                }  
+                else {  
+                input.setCustomValidity("");  
+                }                 
+                }  
+        </script>
 	<!--MODALS END-->
   <!--CONTENT END-->
   </div>

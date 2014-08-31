@@ -22,9 +22,9 @@
 		<span class="position">Position</span>
 	  </div>
 	  <ul>
-	    <li class="nav_pos"><a href="pos.html" title="Point of Sales">Point of Sales</a></li>
-	    <li class="nav_ingredients"><a href="ingredients.html" title="Ingredients">Ingredients <span>2</span></a></li>
-	    <li class="nav_packaged"><a href="packaged.html" title="Pacakaged Items">Packaged Items <span>1</span></a></li>
+	    <li class="nav_pos"><a href="pos.jsp" title="Point of Sales">Point of Sales</a></li>
+	    <li class="nav_ingredients"><a href="GetIngredientListServlet" title="Ingredients">Ingredients <span>2</span></a></li>
+	    <li class="nav_packaged"><a href="GetPackagedListServlet" title="Pacakaged Items">Packaged Items <span>1</span></a></li>
       </ul>
     </div>
   </div>
@@ -38,10 +38,10 @@
 	  </hgroup>
       <div class="subMenu">
 	    <ul>
-	      <li><a href="dishes.html" title="Manage Dishes">Dishes <span>1</span></a></li>
-		  <li><a href="users.html" title="Manage Users">Users</a></li>
-		  <li><a href="logIngredientRestock.html" title="View Logs">View Logs</a></li>
-		  <li><a href="" title="Log Out">Log Out</a></li>
+	      <li><a href="dishes.jsp" title="Manage Dishes">Dishes <span>1</span></a></li>
+		  <li><a href="users.jsp" title="Manage Users">Users</a></li>
+		  <li><a href="GetIngredientRestockLogListServlet" title="View Logs">View Logs</a></li>
+		  <li><a href="index.jsp" title="Log Out">Log Out</a></li>
 		  <li id="dateTime">DATE / TIME</li>
 	    </ul>
       </div>

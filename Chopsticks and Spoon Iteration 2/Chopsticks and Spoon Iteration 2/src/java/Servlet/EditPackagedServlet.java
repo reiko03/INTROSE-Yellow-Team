@@ -50,7 +50,7 @@ public class EditPackagedServlet extends HttpServlet {
             System.out.println(threshold);
             pack.editPackaged(id, name, price, threshold);
           
-            response.sendRedirect("packaged.jsp");
+            response.sendRedirect("packaged.jsp#successEdit");
         } finally {
             out.close();
         }

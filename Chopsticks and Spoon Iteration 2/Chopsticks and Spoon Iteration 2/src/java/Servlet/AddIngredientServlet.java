@@ -11,6 +11,7 @@ import DAOImplementation.IngredientImplementation;
 import DAOInterface.IngredientInterface;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.ArrayList;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -46,6 +47,7 @@ public class AddIngredientServlet extends HttpServlet {
            double cost;
            String tempthreshold;
            int threshold;
+           int isnotUnique = 0;
             
            IngredientInterface ingredient = new IngredientImplementation();
            IngredientBean in = new IngredientBean();
@@ -64,13 +66,21 @@ public class AddIngredientServlet extends HttpServlet {
            threshold = Integer.parseInt(tempthreshold);
            in.setIngredient_threshold(threshold);
           
-            ingredient.addIngredient(in);
-           
-          //HttpSession session = request.getSession();
-                // session.setAttribute("sh",sh);
-            out.println("<script>alert('Successfully created new ingredient!')</script>");
-            out.println("<script>window.location='ingredients.jsp'</script>");
-            response.sendRedirect("ingredients.jsp");
+            ArrayList<IngredientBean> ingredientlist = ingredient.getIngredientList();
+            for(int i= 0; i < ingredientlist.size(); i++){
+                if(in.getIngredient_name().equals(ingredientlist.get(i).getIngredient_name())){
+                    isnotUnique = 1;
+                    break;
+                }
+                else isnotUnique = 0;
+            }
+            
+            if(isnotUnique == 1)
+                response.sendRedirect("ingredients.jsp#failCreate");
+            else{
+                ingredient.addIngredient(in);
+                response.sendRedirect("ingredients.jsp#successCreate");
+            }
           
         } finally {
             out.close();

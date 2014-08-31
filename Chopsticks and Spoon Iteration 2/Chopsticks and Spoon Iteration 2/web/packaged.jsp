@@ -28,7 +28,7 @@
 		<span class="position"><%out.println(useraccount.getUser_level());%></span>
 	  </div>
 	  <ul>
-	    <li class="nav_pos"><a href="pos.html" title="Point of Sales">Point of Sales</a></li>
+	    <li class="nav_pos"><a href="pos.jsp" title="Point of Sales">Point of Sales</a></li>
 	    <li class="nav_ingredients"><a href="GetIngredientListServlet" title="Ingredients">Ingredients <span>2</span></a></li>
 	    <li class="nav_packaged"><a href="GetPackagedListServlet" title="Pacakaged Items">Packaged Items <span>1</span></a></li>
       </ul>
@@ -57,13 +57,13 @@
   </div>
   <!--CONTENT START-->
   <section class="wrapContent">
-    <h1>Packaged Items</h1>
+    <h1>Packaged Items</h1><!--
 	<div class="left">
 	  <form id="searchPackaged" class="search">
 	    <input type="search" name="search" placeholder="Search..">
 		<input type="submit" value="Search">
 	  </form>
-	</div>
+	</div>-->
 	<div class="right">
 		<a class="button left" href="GetPackagedListServlet" title="Refresh">Refresh</a>
 	  <a class="button left" href="#reportDamaged" title="Report Damaged">Report Damaged</a>
@@ -155,6 +155,36 @@
 	</table>
   </section>
   <!--MODALS START-->
+  <div id="successReport" class="wrapModal">
+	   <div class="alert alert-warning alert-dismissible" role="alert">
+  <a class="right close button" href="#close" data-dismiss="alert" title="Close">X</a>
+  <strong><font color="green">Success!</font></strong> <font color="black">You have just successfully reported a damaged package!</font>
+</div>
+</div>
+  <div id="successRestock" class="wrapModal">
+	   <div class="alert alert-warning alert-dismissible" role="alert">
+  <a class="right close button" href="#close" data-dismiss="alert" title="Close">X</a>
+  <strong><font color="green">Success!</font></strong> <font color="black">You have just successfully restocked a package!</font>
+</div>
+</div>
+  <div id="successEdit" class="wrapModal">
+	   <div class="alert alert-warning alert-dismissible" role="alert">
+  <a class="right close button" href="#close" data-dismiss="alert" title="Close">X</a>
+  <strong><font color="green">Success!</font></strong> <font color="black">You have just successfully edited an ingredient!</font>
+</div>
+</div>
+  <div id="successCreate" class="wrapModal">
+	   <div class="alert alert-warning alert-dismissible" role="alert">
+  <a class="right close button" href="#close" data-dismiss="alert" title="Close">X</a>
+  <strong><font color="green">Success!</font></strong> <font color="black">You have just successfully edited a package!</font>
+</div>
+</div>
+  <div id="failCreate" class="wrapModal">
+	   <div class="alert alert-warning alert-dismissible" role="alert">
+  <a class="right close button" href="#close" data-dismiss="alert" title="Close">X</a>
+  <strong><font color="red">Error!</font></strong> <font color="black">Unsuccessfully created a packaged item! (*Name must be unique)</font>
+</div>
+</div>
 	<div id="reportDamaged" class="wrapModal">
 	  <div>
 	    <a class="right close button" href="#close" title="Close">X</a>
@@ -168,7 +198,7 @@
                       <%}%>
 			  </select>
 		  </li>
-		  <li>Damaged Quantity: <input required type="text" id="damagedQuantity" name="damagedQuantity"></li>
+		  <li>Damaged Quantity: <input required type="text" pattern="^[1-9]\d*$" id="damagedQuantity" name="damagedQuantity" oninput="check(this)"></li>
 		  </ul>
 		  <br class="clear">
 		  <input type="submit" value="Submit">
@@ -181,12 +211,12 @@
 	    <h3>Create New Packaged Item</h3>
 		<form action="AddPackagedServlet" id="createPackagedForm" method="POST">
 		  <ul>
-		    <li>Packaged Item Name: <input required type="text" name="packagedName"></li>
-		    <li>Quantity: <input required type="text" name="packagedQuantity"></li>
-		    <li>Item Cost (per piece): <input required type="text" name="packagedCost"></li>
-		    <li>Selling Price (per piece): <input required type="text" name="packagedPrice"></li>
+		    <li>Packaged Item Name: <input required type="text" pattern="^[a-zA-Z\s]*$" name="packagedName" oninput="check(this)"></li>
+		    <li>Quantity: <input required type="text" pattern="^[1-9]\d*$" name="packagedQuantity" oninput="check(this)"></li>
+		    <li>Item Cost (per piece): <input required type="text" pattern="^\d*\.?\d*$" name="packagedCost" oninput="check(this)"></li>
+		    <li>Selling Price (per piece): <input required type="text" pattern="^\d*\.?\d*$" name="packagedPrice" oninput="check(this)"></li>
 		    <!--<li>Item Source: <input required type="text" name="packagedSource"></li>-->
-		    <li>Quantity Threshold: <input required type="text" name="packagedThreshold"></li>
+		    <li>Quantity Threshold: <input required type="text" pattern="^[1-9]\d*$" name="packagedThreshold" oninput="check(this)"></li>
 		  </ul>
 		  <br class="clear">
 		  <input type="submit" value="Submit">
@@ -200,10 +230,10 @@
 		<form action="RestockPackagedServlet" id="restockPackagedForm">
 		  <ul>
 		    <li id="restockPackagedName"><h4>Packaged Item</h4></li>
-                    <input type="hidden" id="restockpackagedID" id="restockpackagedID" name="restockpackagedID">
-		    <li>Restock Quantity: <input required type="text" id="restockQuantity" name="restockQuantity"></li>
-		    <li>Restock Cost (per piece): <input required type="text" id="restockCost" name="restockCost"></li>
-		    <li>Restock Source: <input required type="text" id="restockSource" name="restockSource"></li>
+                    <input type="hidden" id="restockpackagedID" id="restockpackagedID" name="restockpackagedID" >
+		    <li>Restock Quantity: <input required type="text" pattern="^[1-9]\d*$" id="restockQuantity" name="restockQuantity" oninput="check(this)"></li>
+		    <li>Restock Cost (per piece): <input required type="text" pattern="^\d*\.?\d*$" id="restockCost" name="restockCost" oninput="check(this)"></li>
+		    <li>Restock Source: <input required type="text" id="restockSource" name="restockSource" oninput="check(this)"></li>
 		  </ul>
 		  <br class="clear">
 		  <input type="submit" value="Submit">
@@ -218,15 +248,25 @@
 		  <ul>
 		    <li id="editPackagedName"><h4>Packaged Item Info</h4></li>
                     <input type="hidden" id="packagedID" name="packagedID">
-		    <li>New Name: <input required type="text" id="packagedName" name="packagedName"></li>
-		    <li>New Selling Price: <input required type="text" id="packagedPrice" name="packagedPrice"></li>
-		    <li>New Threshold: <input required type="text" id="packagedThreshold" name="packagedThreshold"></li>
+		    <li>New Name: <input required type="text" pattern="^[a-zA-Z\s]*$" id="packagedName" name="packagedName" oninput="check(this)"></li>
+		    <li>New Selling Price: <input required type="text" pattern="^\d*\.?\d*$" id="packagedPrice" name="packagedPrice" oninput="check(this)"></li>
+		    <li>New Threshold: <input required type="text" pattern="^[1-9]\d*$" id="packagedThreshold" name="packagedThreshold" oninput="check(this)"></li>
 		  </ul>
 		  <br class="clear">
 		  <input type="submit" value="Submit">
 		</form>
 	  </div>
 	</div>
+        <script>
+          function check(input) {  
+                if(input.validity.patternMismatch){  
+                input.setCustomValidity("Please enter a valid input.");  
+                }  
+                else {  
+                input.setCustomValidity("");  
+                }                 
+                }  
+        </script>
 	<!--MODALS END-->
   <!--CONTENT END-->
   </div>

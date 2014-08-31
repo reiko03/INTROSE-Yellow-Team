@@ -1,3 +1,4 @@
+<%@page import="Bean.UsersBean"%>
 <%@page import="Bean.IngredientBean"%>
 <%@page import="java.util.ArrayList"%>
 <%@ page import="java.io.*,java.util.*, javax.servlet.*" %>
@@ -19,12 +20,14 @@
     </head>
     <body id="body_dishes">
         <div class="wrap">
+            <% UsersBean useraccount = new UsersBean();
+            useraccount = (UsersBean)session.getAttribute("userAccount");%>
             <!--SIDENAV START-->
             <div class="wrapSideNav">
                 <div class="sideNav">
                     <div class="userProfile">
-                        <span class="username">Username</span>
-                        <span class="position">Position</span>
+                        <span class="username"><%out.println(useraccount.getUser_name());%></span>
+		<span class="position"><%out.println(useraccount.getUser_level());%></span>
                     </div>
                     <ul>
                         <li class="nav_pos"><a href="pos.html" title="Point of Sales">Point of Sales</a></li>
@@ -45,8 +48,8 @@
                         <ul>
                             <li><a href="dishes.jsp" title="Manage Dishes">Dishes <span>1</span></a></li>
                             <li><a href="users.jsp" title="Manage Users">Users</a></li>
-                            <li><a href="logIngredientRestock.jsp" title="View Logs">View Logs</a></li>
-                            <li><a href="" title="Log Out">Log Out</a></li>
+                            <li><a href="GetIngredientRestockLogListServlet" title="View Logs">View Logs</a></li>
+                            <li><a href="index.jsp" title="Log Out">Log Out</a></li>
                             <li id="dateTime"><%= new java.util.Date()%></li>
                         </ul>
                     </div>
@@ -77,7 +80,7 @@
                     </tr>
                     <%
                         ArrayList<IngredientBean> inglist = (ArrayList<IngredientBean>) session.getAttribute("ingredientlist");
-                       
+                        System.out.println("WHYYYY");
                         for (int i = 0; i < inglist.size(); i++) {
                             System.out.println(inglist.get(i).getIngredient_id());%>
                     <% }%>
@@ -113,11 +116,18 @@
                 <div>
                     <a class="right close button" href="#close" title="Close">X</a>
                     <h3>Create New Dish</h3>
-                    <form id="createDishForm">
+                    <form id="createDishForm" action="AddDishServlet" method="POST">
                         <ul>
                             <li>New Dish Name: <input required type="text" name="dishName"></li>
                             <li>New Dish Price: <input required type="text" name="dishPrice"></li>
                             <li>Recipe:
+                                 <select name="chooseIngredient" onchange="ajaxGenerateIngredient(this.value)">
+												<option value="-1"></option>
+                                                <%for (int j = 0; j < inglist.size(); j++) {%>
+                                                <option value="<%=inglist.get(j).getIngredient_id()%>"><%out.println(inglist.get(j).getIngredient_name());%></option>
+                                                <%}%>
+                                            </select>
+                                              <button type="button" id="addRow">Add this</button><br>
                                 <table id="newRecipe">
                                     <tr>
                                         <th>Ingredient</th>
@@ -126,8 +136,9 @@
                                     </tr>
                                    
                                 </table>
-                                <strong class="right">Total Cost: <span id="recipeTotal">00.00</span></strong>
-                                <a class="button" href="#addNewIngredient" title="add another ingredient">+ add another ingredient</a>
+								<input type="hidden" id="ingredientNumbers" name="ingredientNumbers">
+                                <strong class="right">Total Cost: <input type="text" readonly name="recipeTotal" id="recipeTotal"></strong>
+                              
                             </li>
                         </ul>
                         <br class="clear">
@@ -136,39 +147,7 @@
                 </div>
             </div>
                         
-			<div id="addNewIngredient" class="wrapModal">
-                <div>
-                    <a class="right close button" href="#close" title="Close">X</a>
-                    <form id="addNewIngredientForm">
-                        <ul>
-                               <table id="newRecipe">
-                                    <tr>
-                                        <th>Ingredient</th>
-                                        <th>Weight (kg)</th>
-                                        <th>Cost</th>
-                                    </tr>
-                                    <tr>
-
-                                        <td>
-                                            <select name="chooseIngredient" onchange="ajaxGenerateIngredient(this.value)">
-                                                <%for (int j = 0; j < inglist.size(); j++) {%>
-                                                <option value="<%=inglist.get(j).getIngredient_id()%>"><%out.println(inglist.get(j).getIngredient_name());%></option>
-                                                <%}%>
-                                            </select>
-                                        </td> 
-
-                                        <td><input required type="text" name="recipeWeight" id="recipeWeight"></td>
-                                        <td><input type="text" id="recipeCost" readonly></td>
-                                    </tr>
-                                </table>
-                              
-                           </li>
-                        </ul>
-                        <br class="clear">
-                        <input type="submit" value="Submit">
-                    </form>
-                </div>
-            </div>                               
+			
             <div id="viewRecipe" class="wrapModal">
                 <div>
                     <a class="right close button" href="#close" title="Close">X</a>
@@ -248,7 +227,11 @@
         </div>
 
         <script>
+		
+		 var numbers = new Array();
+                 var total = 0;
 		function ajaxGenerateIngredient(ingID){
+		
 		$.ajax({
 
         url: "GenerateDishIngredient",
@@ -262,16 +245,33 @@
         },
 
         success: function (data) {
-            
-                       $('#recipeWeight').on('change', function() {
-  recipeCost.val(recipeWeight*data.IngCost/data.IngWeight);
-  $('#addNewIngredientForm').on('submit', function(){
-   $('#newRecipe').append('<tr><td>'+ data.IngName +'</td></tr>' 
-						 +'<td>'+recipeWeight.value+'</td>'+
-						 '<td>'+recipeCost.value+'</td>');
+              $('#addRow').unbind('click');
+          $('#addRow').click(function(){
+              
+               $('#newRecipe').append('<tr><td>'+ data.IngName +'</td>' 
+						 +'<td><input type="text" id="recipeWeight'+data.IngID+'"></td>'+
+						 '<td><input type="text" readonly id="recipeCost'+data.IngID+'"></td></tr>');
   
-  });// or $(this).val()
-});
+document.getElementById("recipeWeight"+data.IngID).onchange = function() {
+			 document.getElementById("recipeCost"+data.IngID).value=document.getElementById("recipeWeight"+data.IngID).value * data.IngCost/data.IngWeight;
+                        //  for(int x = 0; x < numbers.length());x++){
+          total+=parseFloat(document.getElementById("recipeCost"+data.IngID).value);
+   // }
+                         document.getElementById("recipeTotal").value=total;
+};		
+          
+          $('#ingredientNumbers').val(numbers.join(","));
+          
+         
+    });
+             
+			
+                       //$('#recipeWeight').on('change', function() {
+					  
+					   
+  //$('#recipeCost').val(data.IngCost);
+ // or $(this).val()
+//});
 
                 //inventoryNumbers.push(data.RMInventoryID);
    
@@ -280,7 +280,7 @@
                 
                // $('#addRow').unbind('click');
                
-            });
+            
            
         },
 
@@ -290,6 +290,12 @@
     });
 		
 		
+		}
+		function myFunction(){
+		 $('#newRecipe').append('<tr><td>'+ data.IngName +'</td></tr>' 
+						 +'<td>'+recipeWeight.value+'</td>'+
+						 '<td>'+recipeCost.value+'</td></tr>');
+  
 		}
 		</script>
         <!--  <script>

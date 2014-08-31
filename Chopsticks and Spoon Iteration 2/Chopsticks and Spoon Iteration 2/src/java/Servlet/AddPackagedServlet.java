@@ -11,6 +11,7 @@ import DAOImplementation.PackagedImplementation;
 import DAOInterface.PackagedInterface;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.ArrayList;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -47,6 +48,7 @@ public class AddPackagedServlet extends HttpServlet {
            double price;
            String tempthreshold;
            int threshold;
+           int isnotUnique = 0;
             
             PackagedInterface packaged = new PackagedImplementation();
             PackagedBean pack = new PackagedBean();
@@ -69,11 +71,23 @@ public class AddPackagedServlet extends HttpServlet {
            threshold = Integer.parseInt(tempthreshold);
            pack.setPackaged_threshold(threshold);
           
-           packaged.addPackaged(pack);
+            ArrayList<PackagedBean> packagedlist = packaged.getPackagedList();
+            for(int i= 0; i < packagedlist.size(); i++){
+                if(pack.getPackaged_name().equals(packagedlist.get(i).getPackaged_name())){
+                    isnotUnique = 1;
+                    break;
+                }
+                else isnotUnique = 0;
+            }
+            
+            if(isnotUnique == 1)
+                response.sendRedirect("packaged.jsp#failCreate");
+            else{
+                packaged.addPackaged(pack);
+                response.sendRedirect("packaged.jsp#successCreate");
+            }
            
-          //HttpSession session = request.getSession();
-                // session.setAttribute("sh",sh);
-                 response.sendRedirect("packaged.jsp");
+           
         } finally {
             out.close();
         }

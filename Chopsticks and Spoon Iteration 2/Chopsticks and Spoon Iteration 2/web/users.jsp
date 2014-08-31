@@ -56,13 +56,13 @@
   </div>
   <!--CONTENT START-->
   <section class="wrapContent">
-    <h1>Users</h1>
+    <h1>Users</h1><!--
 	<div class="left">
 	  <form id="searchDish" class="search">
 	    <input type="search" name="search" placeholder="Search..">
 		<input type="submit" value="Search">
 	  </form>
-	</div>
+	</div>-->
 	<div class="right">
 	  <a class="button left" href="#createUser" title="Create New User">Create New User</a>
            <a class="button left" href="#editUser" title="Edit">Edit User</a>

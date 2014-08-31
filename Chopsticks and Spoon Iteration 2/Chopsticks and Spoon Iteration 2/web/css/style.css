@@ -34,6 +34,7 @@ h1{font-size:2em; color:#fff; border-bottom:3px solid #fff; margin:0 0 20px; pad
 .text-center{text-align:center;}
 .button{background:#373B40; color:#bbb; font-size:0.75em; margin:0 5px 0; padding:3px 5px; border-radius:5px;}
 .button:hover{background:#4f3f8c; color:#ffeba3;}
+.buttonRefresh{background:#DB1919; color:#bbb; font-size:0.75em; margin:0 5px 0; padding:3px 5px; border-radius:5px;}
 table .button{padding:2px; line-height:20px;}
 
 /*****MODAL*****/
