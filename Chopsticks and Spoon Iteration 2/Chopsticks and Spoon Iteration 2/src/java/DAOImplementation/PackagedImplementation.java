@@ -52,7 +52,12 @@ public class PackagedImplementation implements PackagedInterface {
          try {
             Connector c = new Connector();
             Connection connection = c.getConnection();
-            String query = "insert into packaged(packaged_name, packaged_quantity, packaged_cost, packaged_price, packaged_threshold) values (?, ?, ?, ?, ?);";
+            String query = "insert into packaged(packaged_name, packaged_quantity, packaged_cost, packaged_price, packaged_threshold, packaged_needSupply) values (?, ?, ?, ?, ?, ?);";
+            
+            int needSupply = 0;
+            if(pbean.getPackaged_quantity() <= pbean.getPackaged_threshold())
+                needSupply = 1;
+            
             PreparedStatement ps = connection.prepareStatement(query);
             
             ps.setString(1, pbean.getPackaged_name());
@@ -60,6 +65,7 @@ public class PackagedImplementation implements PackagedInterface {
             ps.setDouble(3, pbean.getPackaged_cost());
             ps.setDouble(4, pbean.getPackaged_price());
             ps.setInt(5, pbean.getPackaged_threshold());
+            ps.setInt(6, needSupply);
             ps.executeUpdate(); //add, update, delete
         } catch (SQLException ex) {
              Logger.getLogger(IngredientImplementation.class.getName()).log(Level.SEVERE, null, ex);

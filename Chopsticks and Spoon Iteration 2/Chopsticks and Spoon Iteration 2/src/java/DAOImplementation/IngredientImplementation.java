@@ -31,7 +31,11 @@ public class IngredientImplementation implements IngredientInterface {
         try {
             Connector c = new Connector();
             Connection connection = c.getConnection();
-            String query = "insert into ingredient(ingredient_name, ingredient_weight, ingredient_cost, ingredient_threshold) values (?, ?, ?, ?);";
+            String query = "insert into ingredient(ingredient_name, ingredient_weight, ingredient_cost, ingredient_threshold, ingredient_needSupply) values (?, ?, ?, ?, ?);";
+            
+            int needSupply = 0;
+            if(ibean.getIngredient_weight() <= ibean.getIngredient_threshold())
+                needSupply = 1;
             
             PreparedStatement ps = connection.prepareStatement(query);
             
@@ -39,6 +43,7 @@ public class IngredientImplementation implements IngredientInterface {
             ps.setDouble(2, ibean.getIngredient_weight());            
             ps.setDouble(3, ibean.getIngredient_cost());
             ps.setInt(4, ibean.getIngredient_threshold());
+            ps.setInt(5, needSupply);
             ps.executeUpdate(); //add, update, delete
         } catch (SQLException ex) {
              Logger.getLogger(IngredientImplementation.class.getName()).log(Level.SEVERE, null, ex);

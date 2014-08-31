@@ -56,7 +56,6 @@ public class RestockIngredientServlet extends HttpServlet {
             double cost = Double.parseDouble(request.getParameter("restockCost"));
             String source = request.getParameter("restockSource");
             
-            
             in.restockIngredient(ingredientid, weight, cost);
             in.addIngredientRestockLog(userid, ingredientid, weight, cost, date, source);
             in.checkSupply(ingredientid);

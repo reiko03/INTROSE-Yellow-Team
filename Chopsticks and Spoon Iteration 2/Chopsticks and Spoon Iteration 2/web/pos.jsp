@@ -1,3 +1,7 @@
+<%@page import="Bean.IngredientBean"%>
+<%@page import="Bean.PackagedBean"%>
+<%@page import="java.util.ArrayList"%>
+<%@page import="Bean.UsersBean"%>
 <!DOCTYPE html>
 <!--[if lt IE 7 ]><html class="ie ie6" lang="en"> <![endif]-->
 <!--[if IE 7 ]><html class="ie ie7" lang="en"> <![endif]-->
@@ -14,17 +18,31 @@
 </head>
 <body id="body_pos">
   <div class="wrap">
+      <% UsersBean useraccount = new UsersBean();
+            useraccount = (UsersBean)session.getAttribute("userAccount");%>
   <!--SIDENAV START-->
   <div class="wrapSideNav">
     <div class="sideNav">
 	  <div class="userProfile">
-	    <span class="username">Username</span>
-		<span class="position">Position</span>
+	    <span class="username"><%out.println(useraccount.getUser_name());%></span>
+		<span class="position"><%out.println(useraccount.getUser_level());%></span>
 	  </div>
+                <% ArrayList<IngredientBean> ilist = (ArrayList<IngredientBean>) session.getAttribute("ingredientlist");
+                    int ingredientNotif = 0;
+                    for(int i = 0; i < ilist.size(); i++){
+                        if(ilist.get(i).getIngredient_needSupply() == 1)
+                            ingredientNotif++;
+                    }%>
+                    <% ArrayList<PackagedBean> plist = (ArrayList<PackagedBean>) session.getAttribute("packagedlist");
+                    int packagedNotif = 0;
+                    for(int j = 0; j < plist.size(); j++){
+                        if(plist.get(j).getPackaged_needSupply() == 1)
+                            packagedNotif++;
+                    }%>
 	  <ul>
 	    <li class="nav_pos"><a href="pos.jsp" title="Point of Sales">Point of Sales</a></li>
-	    <li class="nav_ingredients"><a href="GetIngredientListServlet" title="Ingredients">Ingredients <span>2</span></a></li>
-	    <li class="nav_packaged"><a href="GetPackagedListServlet" title="Pacakaged Items">Packaged Items <span>1</span></a></li>
+	    <li class="nav_ingredients"><a href="GetIngredientListServlet" title="Ingredients">Ingredients <span><%out.println(ingredientNotif);%></span></a></li>
+                        <li class="nav_packaged"><a href="GetPackagedListServlet" title="Pacakaged Items">Packaged Items <span><%out.println(packagedNotif);%></span></a></li>
       </ul>
     </div>
   </div>
@@ -39,7 +57,9 @@
       <div class="subMenu">
 	    <ul>
 	      <li><a href="dishes.jsp" title="Manage Dishes">Dishes <span>1</span></a></li>
-		  <li><a href="users.jsp" title="Manage Users">Users</a></li>
+		  <li><%if(useraccount.getUser_level().equals("user")){
+                            %><div style="display: none">
+                                <%}else{%><div style="display: inline"><a href="users.jsp" title="Manage Users">Users</a></div><%}%></li>
 		  <li><a href="GetIngredientRestockLogListServlet" title="View Logs">View Logs</a></li>
 		  <li><a href="index.jsp" title="Log Out">Log Out</a></li>
 		  <li id="dateTime">DATE / TIME</li>

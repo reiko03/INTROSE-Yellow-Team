@@ -112,7 +112,7 @@
 	    <h3>Create New User</h3>
 		<form id="createUserForm" method="POST" action="AddUserServlet" >
 		  <ul>
-		    <li>New Username: <input required type="text" pattern="^(?=.{6}$)(?![_.])(?!.*[_.]{2})[a-zA-Z0-9-_]+(?<![_-])$" name="Username" oninput="check(this)"></li>
+		    <li>New Username: <input required type="text" pattern="^.{6,20}[a-zA-Z0-9-_]+$" name="Username" oninput="check(this)"></li>
 		    <li>New Password: <input required type="text" pattern="^[\S]*$" name="Password" oninput="check(this)"></li>
 		    <li>User Position: 
 			  <select name="Position">

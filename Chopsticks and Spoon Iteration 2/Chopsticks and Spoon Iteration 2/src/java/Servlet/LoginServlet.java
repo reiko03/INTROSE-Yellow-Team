@@ -63,7 +63,7 @@ public class LoginServlet extends HttpServlet {
             session.setAttribute("userAccount", user);
             session.setAttribute("userID", user.getUser_id());
             session.setAttribute("userName", user.getUser_name());
-               response.sendRedirect("dishes.jsp");
+               response.sendRedirect("pos.jsp");
            } 
            else{
                out.println("<script>alert('Login fail.')</script>");

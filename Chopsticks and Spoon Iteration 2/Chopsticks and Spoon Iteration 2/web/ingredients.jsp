@@ -59,7 +59,9 @@
       <div class="subMenu">
 	    <ul>
 	      <li><a href="dishes.jsp" title="Manage Dishes">Dishes <span>1</span></a></li>
-		  <li><a href="users.jsp" title="Manage Users">Users</a></li>
+		  <li><%if(useraccount.getUser_level().equals("user")){
+                            %><div style="display: none">
+                                <%}else{%><div style="display: inline"><a href="users.jsp" title="Manage Users">Users</a></div><%}%></li>
 		  <li><a href="GetIngredientRestockLogListServlet" title="View Logs">View Logs</a></li>
 		  <li><a href="index.jsp" title="Log Out">Log Out</a></li>
 		  <li id="dateTime"><%= new java.util.Date() %></li>

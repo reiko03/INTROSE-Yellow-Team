@@ -44,7 +44,7 @@ public class AddIngredientServlet extends HttpServlet {
         PrintWriter out = response.getWriter();
         try {
             /* TODO output your page here. You may use following sample code. */
-            
+          
            String tempweight;
            double weight;
            String tempcost;
@@ -52,10 +52,9 @@ public class AddIngredientServlet extends HttpServlet {
            String tempthreshold;
            int threshold;
            int isnotUnique = 0;
-            
+           
            IngredientInterface ingredient = new IngredientImplementation();
            IngredientBean in = new IngredientBean();
-           
            
            in.setIngredient_name(request.getParameter("ingredientName"));
            
@@ -71,6 +70,7 @@ public class AddIngredientServlet extends HttpServlet {
            threshold = Integer.parseInt(tempthreshold);
            in.setIngredient_threshold(threshold);
           
+           
             ArrayList<IngredientBean> ingredientlist = ingredient.getIngredientList();
             for(int i= 0; i < ingredientlist.size(); i++){
                 if(in.getIngredient_name().equals(ingredientlist.get(i).getIngredient_name())){
