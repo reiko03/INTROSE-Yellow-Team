@@ -17,6 +17,7 @@ public class PackagedBean {
     private double packaged_cost;
     private double packaged_price;
     private int packaged_threshold;
+    private int packaged_needSupply;
 
     public double getPackaged_cost() {
         return packaged_cost;
@@ -64,6 +65,14 @@ public class PackagedBean {
 
     public void setPackaged_threshold(int packaged_threshold) {
         this.packaged_threshold = packaged_threshold;
+    }
+
+    public int getPackaged_needSupply() {
+        return packaged_needSupply;
+    }
+
+    public void setPackaged_needSupply(int packaged_needSupply) {
+        this.packaged_needSupply = packaged_needSupply;
     }
     
     

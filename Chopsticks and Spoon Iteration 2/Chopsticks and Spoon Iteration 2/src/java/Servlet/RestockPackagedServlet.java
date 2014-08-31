@@ -57,7 +57,7 @@ public class RestockPackagedServlet extends HttpServlet {
             
             pack.restockPackaged(packagedid, quantity, cost);
             pack.addPackagedRestockLog(userid, packagedid, quantity, cost, date, source);
-          
+            pack.checkSupply(packagedid);
             response.sendRedirect("packaged.jsp#successRestock");
         } finally {
             out.close();

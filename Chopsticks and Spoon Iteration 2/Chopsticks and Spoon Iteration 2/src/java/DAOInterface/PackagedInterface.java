@@ -38,4 +38,6 @@ public interface PackagedInterface {
     
     public ArrayList<PackagedBean> getPackagedList();
     
+    public void checkSupply(int id);
+    
 }

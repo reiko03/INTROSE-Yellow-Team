@@ -14,6 +14,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -68,11 +70,6 @@ public class UserImplementation implements UsersInterface {
         return false;
     }
         
-    @Override
-    public void deleteUser(UsersBean ubean) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-    
    
     @Override
     public boolean editUser(UsersBean ubean, int x){

@@ -1,4 +1,11 @@
 <%@page import="Bean.UsersBean"%>
+<%@page import="Bean.PackagedBean"%>
+<%@page import="DAOImplementation.IngredientImplementation"%>
+
+<%@page import="DAOInterface.IngredientInterface"%>
+<%@page import="Bean.DishBean"%>
+<%@page import="DAOImplementation.DishImplementation"%>
+<%@page import="DAOInterface.DishInterface"%>
 <%@page import="Bean.IngredientBean"%>
 <%@page import="java.util.ArrayList"%>
 <%@ page import="java.io.*,java.util.*, javax.servlet.*" %>
@@ -29,10 +36,22 @@
                         <span class="username"><%out.println(useraccount.getUser_name());%></span>
 		<span class="position"><%out.println(useraccount.getUser_level());%></span>
                     </div>
+                    <% ArrayList<IngredientBean> ilist = (ArrayList<IngredientBean>) session.getAttribute("ingredientlist");
+                    int ingredientNotif = 0;
+                    for(int i = 0; i < ilist.size(); i++){
+                        if(ilist.get(i).getIngredient_needSupply() == 1)
+                            ingredientNotif++;
+                    }%>
+                    <% ArrayList<PackagedBean> plist = (ArrayList<PackagedBean>) session.getAttribute("packagedlist");
+                    int packagedNotif = 0;
+                    for(int j = 0; j < plist.size(); j++){
+                        if(plist.get(j).getPackaged_needSupply() == 1)
+                            packagedNotif++;
+                    }%>
                     <ul>
-                        <li class="nav_pos"><a href="pos.html" title="Point of Sales">Point of Sales</a></li>
-                        <li class="nav_ingredients"><a href="GetIngredientListServlet" title="Ingredients">Ingredients <span>2</span></a></li>
-                        <li class="nav_packaged"><a href="GetPackagedListServlet" title="Pacakaged Items">Packaged Items <span>1</span></a></li>
+                        <li class="nav_pos"><a href="pos.jsp" title="Point of Sales">Point of Sales</a></li>
+                        <li class="nav_ingredients"><a href="GetIngredientListServlet" title="Ingredients">Ingredients <span><%out.println(ingredientNotif);%></span></a></li>
+                        <li class="nav_packaged"><a href="GetPackagedListServlet" title="Pacakaged Items">Packaged Items <span><%out.println(packagedNotif);%></span></a></li>
                     </ul>
                 </div>
             </div>
@@ -79,34 +98,31 @@
                         <th>Edit</th>
                     </tr>
                     <%
-                        ArrayList<IngredientBean> inglist = (ArrayList<IngredientBean>) session.getAttribute("ingredientlist");
-                        System.out.println("WHYYYY");
-                        for (int i = 0; i < inglist.size(); i++) {
-                            System.out.println(inglist.get(i).getIngredient_id());%>
+                        IngredientInterface ingDAO = new IngredientImplementation();
+                        ArrayList<IngredientBean> inglist = ingDAO.getIngredientList();
+                        for (int i = 0; i < inglist.size(); i++) {%>
                     <% }%>
                     <!--YUNG EDIT DITO PWEDENG I-EDIT YUNG SELLING PRICE & RECIPE-->
                     <!--PUT DISHES HERE!-->
-                    <tr class="warning">
-                        <td>Teriyaki Beef</td>
-                        <td>53.00</td>
-                        <td>40.00</td>
+                    <%  DishInterface dishDAO = new DishImplementation();
+                        ArrayList<DishBean> dishList = dishDAO.getDishList();
+                        for(int i = 0; i< dishList.size();i++){
+                        if(dishList.get(i).getDish_cost() > dishList.get(i).getDish_price()){
+                            %>
+                            <tr class="warning">
+                        <%}else{%>
+                        <tr>
+                        <%}%>
+                         <td><%=dishList.get(i).getDish_name()%></td>
+                        <td><%=dishList.get(i).getDish_cost()%></td>
+                        <td><%=dishList.get(i).getDish_price()%></td>
                         <td class="tableButton"><a href="#viewRecipe" title="View Recipe">View Recipe</a></td>
                         <td class="tableButton"><a href="#editDish" title="Edit">> Edit</a></td>
-                    </tr>
-                    <tr>
-                        <td>Pancit Bihon</td>
-                        <td>190.00</td>
-                        <td>230.00</td>
-                        <td class="tableButton"><a href="#viewRecipe" title="View Recipe">View Recipe</a></td>
-                        <td class="tableButton"><a href="#editDish" title="Edit">> Edit</a></td>
-                    </tr>
-                    <tr>
-                        <td>Steamed Dory</td>
-                        <td>70.00</td>
-                        <td>95.00</td>
-                        <td class="tableButton"><a href="#viewRecipe" title="View Recipe">View Recipe</a></td>
-                        <td class="tableButton"><a href="#editDish" title="Edit">> Edit</a></td>
-                    </tr>
+                        </tr>
+                        <%}%>
+                    
+                    
+                   
                 </table>
             </section>
             <!--MODALS START-->
@@ -127,7 +143,7 @@
                                                 <option value="<%=inglist.get(j).getIngredient_id()%>"><%out.println(inglist.get(j).getIngredient_name());%></option>
                                                 <%}%>
                                             </select>
-                                              <button type="button" id="addRow">Add this</button><br>
+                                              <a class="button" id="addRow" title="Add this">Add this</a><br>
                                 <table id="newRecipe">
                                     <tr>
                                         <th>Ingredient</th>
@@ -136,7 +152,8 @@
                                     </tr>
                                    
                                 </table>
-								<input type="hidden" id="ingredientNumbers" name="ingredientNumbers">
+				<input type="hidden" id="ingredientNumbers" name="ingredientNumbers">
+                                <input type="hidden" id="totalWeight" name="totalWeight">
                                 <strong class="right">Total Cost: <input type="text" readonly name="recipeTotal" id="recipeTotal"></strong>
                               
                             </li>
@@ -225,11 +242,25 @@
             <!--MODALS END-->
             <!--CONTENT END-->
         </div>
+                                            
+                                            <div id="failCreate" class="wrapModal">
+	   <div class="alert alert-warning alert-dismissible" role="alert">
+  <a class="right close button" href="#close" data-dismiss="alert" title="Close">X</a>
+  <strong><font color="red">Error!</font></strong> <font color="black">Unsuccessfully created a dish! (*Name must be unique)</font>
+</div>
+</div>
 
+                                            <div id="successCreate" class="wrapModal">
+	   <div class="alert alert-warning alert-dismissible" role="alert">
+  <a class="right close button" href="#close" data-dismiss="alert" title="Close">X</a>
+  <strong><font color="green">Success!</font></strong> <font color="black">You have just successfully created a dish!</font>
+</div>
+</div>
         <script>
 		
 		 var numbers = new Array();
-                 var total = 0;
+                 var numbers1 = new Array();
+                 
 		function ajaxGenerateIngredient(ingID){
 		
 		$.ajax({
@@ -253,14 +284,26 @@
 						 '<td><input type="text" readonly id="recipeCost'+data.IngID+'"></td></tr>');
   
 document.getElementById("recipeWeight"+data.IngID).onchange = function() {
+                         var total = 0;
+                         var weight = new Array();
 			 document.getElementById("recipeCost"+data.IngID).value=document.getElementById("recipeWeight"+data.IngID).value * data.IngCost/data.IngWeight;
-                        //  for(int x = 0; x < numbers.length());x++){
-          total+=parseFloat(document.getElementById("recipeCost"+data.IngID).value);
-   // }
+                          
+        
+                           
+        for(var x = 0; x < numbers1.length;x++){
+           weight.push(document.getElementById("recipeWeight"+numbers1[x]).value); 
+          total+=parseFloat(document.getElementById("recipeCost"+numbers1[x]).value);
+
+  }
+         $('#totalWeight').val(weight.join(","));
+                    
                          document.getElementById("recipeTotal").value=total;
 };		
-          
+          numbers1.push(data.IngID);
+          numbers.push(data.IngID);
           $('#ingredientNumbers').val(numbers.join(","));
+          
+         
           
          
     });

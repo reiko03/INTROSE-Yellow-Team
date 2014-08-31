@@ -7,6 +7,7 @@
 package DAOInterface;
 import Bean.DishBean;
 import Bean.DishSaleLogBean;
+import Bean.IngredientBean;
 import java.util.ArrayList;
 
 /**
@@ -19,10 +20,14 @@ public interface DishInterface {
 
     public void editDish(DishBean dbean);
     
+    public boolean checkDish(String dishName);
+    
     public void addDishSaleLog(DishBean dbean);
     
     public ArrayList<DishSaleLogBean> getDishSaleLogList();
     
     public ArrayList<DishBean> getDishList();
+    
+    public ArrayList<IngredientBean> getIngredientList();
 
 }

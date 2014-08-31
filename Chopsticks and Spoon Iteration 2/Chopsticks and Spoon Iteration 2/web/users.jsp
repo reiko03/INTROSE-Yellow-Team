@@ -1,3 +1,6 @@
+<%@page import="Bean.PackagedBean"%>
+<%@page import="Bean.IngredientBean"%>
+<%@page import="java.util.ArrayList"%>
 <%@page import="Bean.UsersBean"%>
 <%@page import="DAOImplementation.UserImplementation"%>
 <!DOCTYPE html>
@@ -14,6 +17,7 @@
   <link rel="stylesheet" href="css/style.css">
   <link rel="icon" href="images/favicon.ico">
   <script src="bootstrap/js/jquery-2.1.1.js"></script>
+  <script src="bootstrap/js/jquery.min.js"></script>
 </head>
 <body id="body_users">
   <div class="wrap">
@@ -26,10 +30,22 @@
 	   <span class="username"><%out.println(useraccount.getUser_name());%></span>
 		<span class="position"><%out.println(useraccount.getUser_level());%></span>
 	  </div>
+                <% ArrayList<IngredientBean> ilist = (ArrayList<IngredientBean>) session.getAttribute("ingredientlist");
+                    int ingredientNotif = 0;
+                    for(int i = 0; i < ilist.size(); i++){
+                        if(ilist.get(i).getIngredient_needSupply() == 1)
+                            ingredientNotif++;
+                    }%>
+                    <% ArrayList<PackagedBean> plist = (ArrayList<PackagedBean>) session.getAttribute("packagedlist");
+                    int packagedNotif = 0;
+                    for(int j = 0; j < plist.size(); j++){
+                        if(plist.get(j).getPackaged_needSupply() == 1)
+                            packagedNotif++;
+                    }%>
 	  <ul>
 	    <li class="nav_pos"><a href="pos.jsp" title="Point of Sales">Point of Sales</a></li>
-	    <li class="nav_ingredients"><a href="GetIngredientListServlet" title="Ingredients">Ingredients <span>2</span></a></li>
-	    <li class="nav_packaged"><a href="GetPackagedListServlet" title="Pacakaged Items">Packaged Items <span>1</span></a></li>
+	    <li class="nav_ingredients"><a href="GetIngredientListServlet" title="Ingredients">Ingredients <span><%out.println(ingredientNotif);%></span></a></li>
+                        <li class="nav_packaged"><a href="GetPackagedListServlet" title="Pacakaged Items">Packaged Items <span><%out.println(packagedNotif);%></span></a></li>
       </ul>
     </div>
   </div>
@@ -96,8 +112,8 @@
 	    <h3>Create New User</h3>
 		<form id="createUserForm" method="POST" action="AddUserServlet" >
 		  <ul>
-		    <li>New Username: <input required type="text" name="Username"></li>
-		    <li>New Password: <input required type="text" name="Password"></li>
+		    <li>New Username: <input required type="text" pattern="^(?=.{6}$)(?![_.])(?!.*[_.]{2})[a-zA-Z0-9-_]+(?<![_-])$" name="Username" oninput="check(this)"></li>
+		    <li>New Password: <input required type="text" pattern="^[\S]*$" name="Password" oninput="check(this)"></li>
 		    <li>User Position: 
 			  <select name="Position">
 			    <option value="admin">Admin</option>
@@ -125,8 +141,8 @@
                             <% }%>
 			  </select>
 		    </li>
-		    <li>New Username: <input required type="text" id="newUsername" name="newUsername"></li>
-		    <li>New Password: <input required type="text" id="newPassword" name="newPassword"></li>
+		    <li>New Username: <input required type="text" pattern="^.{6,20}(?![_.])(?!.*[_.]{2})[a-zA-Z0-9-_]+(?<![_-])$" id="newUsername" name="newUsername" oninput="check(this)"></li>
+		    <li>New Password: <input required type="text" pattern="^[\S]*$" id="newPassword" name="newPassword" oninput="check(this)"></li>
 		    <li>New User Position: 
 			  <select name="newPosition" id="newPosition">
 			    <option value="admin">Admin</option>
@@ -173,5 +189,27 @@
     });}
     
 </script>
-    
+<script>
+          function check(input) {  System.out.println("meron.");
+                if(input.validity.patternMismatch){  
+                input.setCustomValidity("Please enter a valid input.");  
+                }    
+                else {
+                input.setCustomValidity("");  
+                }                 
+                }  
+        </script>
+    <div id="successCreate" class="wrapModal">
+	   <div class="alert alert-warning alert-dismissible" role="alert">
+  <a class="right close button" href="users.jsp" data-dismiss="alert" title="Close">X</a>
+  <strong><font color="green">Success!</font></strong> <font color="black">You have just successfully created a user!</font>
+        </div>
+    </div>
+    <div id="failCreate" class="wrapModal">
+	   <div class="alert alert-warning alert-dismissible" role="alert">
+  <a class="right close button" href="#close" data-dismiss="alert" title="Close">X</a>
+  <strong><font color="red">Error!</font></strong> <font color="black">Unsuccessfully created new user! (*Name must be unique)</font>
+</div>
+   </div>
+        
 </html>

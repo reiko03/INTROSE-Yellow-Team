@@ -77,6 +77,7 @@ public class IngredientImplementation implements IngredientInterface {
          ingredientBean.setIngredient_weight(rs.getDouble(3));
          ingredientBean.setIngredient_cost(rs.getDouble(4));
          ingredientBean.setIngredient_threshold(rs.getInt(5));
+         ingredientBean.setIngredient_needSupply(rs.getInt(6));
          return ingredientBean;
         }
         }catch(SQLException exc){
@@ -143,7 +144,7 @@ public class IngredientImplementation implements IngredientInterface {
                 temp.setIngredient_weight(resultSet.getDouble("ingredient_weight"));
                 temp.setIngredient_cost(resultSet.getDouble("ingredient_cost"));
                 temp.setIngredient_threshold(resultSet.getInt("ingredient_threshold"));
-                
+                temp.setIngredient_needSupply(resultSet.getInt("ingredient_needSupply"));
                 ingredientBean.add(temp);
             }
         } catch (SQLException ex) {
@@ -281,6 +282,46 @@ public class IngredientImplementation implements IngredientInterface {
             ps2.setDouble(1, resultWeight);
             ps2.setDouble(2, resultCost);
             ps2.setInt(3, id);
+            ps2.executeUpdate();
+            
+        } catch (SQLException ex) {
+            Logger.getLogger(IngredientImplementation.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    @Override
+    public void checkSupply(int id) {
+         try {
+            Connector c = new Connector();
+            Connection connection = c.getConnection();
+            IngredientBean temp = new IngredientBean();
+            int threshold = 0;
+            double weight = 0;
+            int needSupply = 0;
+            
+            //first get the specific ingredient to make calculations
+            String queryGetIngredient = "SELECT ingredient_weight, ingredient_threshold FROM ingredient WHERE ingredient_id =?"; 
+           
+            PreparedStatement ps1 = connection.prepareStatement(queryGetIngredient);
+            ps1.setInt(1, id);
+            ResultSet resultSet = ps1.executeQuery();
+            
+            while (resultSet.next()) {
+                weight = resultSet.getDouble("ingredient_weight");
+                threshold = resultSet.getInt("ingredient_threshold");
+            }
+            
+            //CALCULATION
+            if(weight <= threshold)
+                    needSupply = 1;
+            else
+                    needSupply = 0;
+            
+            //update the database
+            String query = "update ingredient set ingredient_needSupply = ? where ingredient_id =?";
+            PreparedStatement ps2 = connection.prepareStatement(query);
+            ps2.setDouble(1, needSupply);
+            ps2.setInt(2, id);
             ps2.executeUpdate();
             
         } catch (SQLException ex) {

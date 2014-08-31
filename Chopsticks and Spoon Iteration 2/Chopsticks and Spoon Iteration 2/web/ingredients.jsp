@@ -1,3 +1,4 @@
+<%@page import="Bean.PackagedBean"%>
 <%@page import="Bean.UsersBean"%>
 <%@page import="Bean.IngredientBean"%>
 <%@page import="java.util.ArrayList"%>
@@ -28,10 +29,22 @@
 	    <span class="username"><%out.println(useraccount.getUser_name());%></span>
 		<span class="position"><%out.println(useraccount.getUser_level());%></span>
 	  </div>
+          <% ArrayList<IngredientBean> ilist = (ArrayList<IngredientBean>) session.getAttribute("ingredientlist");
+                    int ingredientNotif = 0;
+                    for(int i = 0; i < ilist.size(); i++){
+                        if(ilist.get(i).getIngredient_needSupply() == 1)
+                            ingredientNotif++;
+                    }%>
+                    <% ArrayList<PackagedBean> plist = (ArrayList<PackagedBean>) session.getAttribute("packagedlist");
+                    int packagedNotif = 0;
+                    for(int j = 0; j < plist.size(); j++){
+                        if(plist.get(j).getPackaged_needSupply() == 1)
+                            packagedNotif++;
+                    }%>
 	  <ul>
 	    <li class="nav_pos"><a href="pos.jsp" title="Point of Sales">Point of Sales</a></li>
-	    <li class="nav_ingredients"><a href="GetIngredientListServlet" title="Ingredients">Ingredients <span>2</span></a></li>
-	    <li class="nav_packaged"><a href="GetPackagedListServlet" title="Pacakaged Items">Packaged Items <span>1</span></a></li>
+	    <li class="nav_ingredients"><a href="GetIngredientListServlet" title="Ingredients">Ingredients <span><%out.println(ingredientNotif);%></span></a></li>
+                        <li class="nav_packaged"><a href="GetPackagedListServlet" title="Pacakaged Items">Packaged Items <span><%out.println(packagedNotif);%></span></a></li>
       </ul>
     </div>
   </div>
@@ -63,7 +76,6 @@
           
 	<div class="right">
             
-          <a id="refresh" class="button left" href="GetIngredientListServlet" title="Refresh">Refresh</a>
 	  <a class="button left" href="#reportSpoiled" title="Report Spoiled">Report Spoiled</a>
 	  <a class="button left" href="#createIngredient" title="Create New Ingredient">Create New Ingredient</a>
 	</div>
@@ -79,8 +91,12 @@
 	  <% 
           ArrayList<IngredientBean> inglist = (ArrayList<IngredientBean>) session.getAttribute("ingredientlist");
            
-                for(int i = 0; i < inglist.size(); i++){ %>
-          <tr>  
+                for(int i = 0; i < inglist.size(); i++){
+                    if(inglist.get(i).getIngredient_needSupply() == 1){%>
+                    <tr class="warning">
+                        <%}else{%>
+                        <tr>
+                        <%}%>
 	    <td><%out.println(inglist.get(i).getIngredient_name());%></td>
 	    <td><%out.println(inglist.get(i).getIngredient_weight());%></td>
 	    <td><%out.println(inglist.get(i).getIngredient_cost());%></td>
@@ -153,25 +169,25 @@
   	<!--MODALS START-->
         <div id="successEdit" class="wrapModal">
 	   <div class="alert alert-warning alert-dismissible" role="alert">
-  <a class="right close button" href="#close" data-dismiss="alert" title="Close">X</a>
+  <a class="right close button" href="GetIngredientListServlet" data-dismiss="alert" title="Close">X</a>
   <strong><font color="green">Success!</font></strong> <font color="black">You have just successfully edited an ingredient!</font>
 </div>
 </div>
         <div id="successReport" class="wrapModal">
 	   <div class="alert alert-warning alert-dismissible" role="alert">
-  <a class="right close button" href="#close" data-dismiss="alert" title="Close">X</a>
+  <a class="right close button" href="GetIngredientListServlet" data-dismiss="alert" title="Close">X</a>
   <strong><font color="green">Success!</font></strong> <font color="black">You have just successfully reported a spoiled ingredient!</font>
 </div>
 </div>
         <div id="successCreate" class="wrapModal">
 	   <div class="alert alert-warning alert-dismissible" role="alert">
-  <a class="right close button" href="#close" data-dismiss="alert" title="Close">X</a>
+  <a class="right close button" href="GetIngredientListServlet" data-dismiss="alert" title="Close">X</a>
   <strong><font color="green">Success!</font></strong> <font color="black">You have just successfully created an ingredient!</font>
 </div>
 </div>
         <div id="successRestock" class="wrapModal">
 	   <div class="alert alert-warning alert-dismissible" role="alert">
-  <a class="right close button" href="#close" data-dismiss="alert" title="Close">X</a>
+  <a class="right close button" href="GetIngredientListServlet" data-dismiss="alert" title="Close">X</a>
   <strong><font color="green">Success!</font></strong> <font color="black">You have just successfully restocked an ingredient!</font>
 </div>
 </div>
@@ -207,10 +223,11 @@
 	    <h3>Create New Ingredient</h3>
 		<form action="AddIngredientServlet" id="createIngredientForm" method="POST">
 		  <ul>
+                    <input type="hidden" id="createingredientID" name="createingredientID">
 		    <li>Ingredient Name: <input required type="text" pattern="^[a-zA-Z\s]*$" name="ingredientName" oninput="check(this)"></li>
 		    <li>Ingredient Weight (kg): <input required type="text" pattern="^\d*\.?\d*$" name="ingredientWeight" oninput="check(this)"></li>
 		    <li>Ingredient Cost: <input required type="text" pattern="^\d*\.?\d*$" name="ingredientCost" oninput="check(this)"></li>
-			<!--<li>Ingredient Source: <input required type="text" name="ingredientSource"></li>-->
+		    <li>Ingredient Source: <input required type="text" name="ingredientSource"></li>
 		    <li>Weight Threshold: <input required type="text" pattern="^\d*\.?\d*$" name="ingredientThreshold" oninput="check(this)"></li>
 		  </ul>
 		  <br class="clear">
@@ -255,8 +272,8 @@
           function check(input) {  
                 if(input.validity.patternMismatch){  
                 input.setCustomValidity("Please enter a valid input.");  
-                }  
-                else {  
+                }    
+                else {
                 input.setCustomValidity("");  
                 }                 
                 }  

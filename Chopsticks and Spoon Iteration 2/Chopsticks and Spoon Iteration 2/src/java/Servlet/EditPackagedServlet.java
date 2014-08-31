@@ -44,12 +44,9 @@ public class EditPackagedServlet extends HttpServlet {
             double price = Double.parseDouble(request.getParameter("packagedPrice"));
             int threshold = Integer.parseInt(request.getParameter("packagedThreshold"));
             
-            System.out.println("packaged " +id);
-            System.out.println(name);
-            System.out.println(price);
-            System.out.println(threshold);
+           
             pack.editPackaged(id, name, price, threshold);
-          
+            pack.checkSupply(id);
             response.sendRedirect("packaged.jsp#successEdit");
         } finally {
             out.close();

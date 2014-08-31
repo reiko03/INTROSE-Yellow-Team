@@ -44,7 +44,9 @@ public class AddUserServlet extends HttpServlet {
            userBean.setUser_password(request.getParameter("Password"));
            userBean.setUser_level(request.getParameter("Position"));
            if(userDAO.addUser(userBean))
-              response.sendRedirect("users.jsp");
+              response.sendRedirect("users.jsp#successCreate");
+           else
+               response.sendRedirect("users.jsp#failCreate");
         } finally {
             out.close();
         }

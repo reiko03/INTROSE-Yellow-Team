@@ -16,6 +16,7 @@ public class IngredientBean {
     private double ingredient_weight;
     private double ingredient_cost;
     private int ingredient_threshold;
+    private int ingredient_needSupply;
 
     public double getIngredient_cost() {
         return ingredient_cost;
@@ -55,6 +56,14 @@ public class IngredientBean {
 
     public void setIngredient_weight(double ingredient_weight) {
         this.ingredient_weight = ingredient_weight;
+    }
+
+    public int getIngredient_needSupply() {
+        return ingredient_needSupply;
+    }
+
+    public void setIngredient_needSupply(int ingredient_needSupply) {
+        this.ingredient_needSupply = ingredient_needSupply;
     }
     
     

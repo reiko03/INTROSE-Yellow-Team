@@ -59,7 +59,7 @@ public class ReportDamagedPackaged extends HttpServlet {
             
             pack.removeDamaged(packagedid, quantity);
             pack.addDamageLog(userid, packagedid, quantity, date);
-          
+            pack.checkSupply(packagedid);
             response.sendRedirect("packaged.jsp#successReport");
         } finally {
             out.close();

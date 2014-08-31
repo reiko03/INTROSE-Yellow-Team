@@ -11,12 +11,16 @@ import DAOImplementation.IngredientImplementation;
 import DAOInterface.IngredientInterface;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 /**
  *
@@ -40,7 +44,7 @@ public class AddIngredientServlet extends HttpServlet {
         PrintWriter out = response.getWriter();
         try {
             /* TODO output your page here. You may use following sample code. */
-           
+            
            String tempweight;
            double weight;
            String tempcost;
@@ -51,6 +55,7 @@ public class AddIngredientServlet extends HttpServlet {
             
            IngredientInterface ingredient = new IngredientImplementation();
            IngredientBean in = new IngredientBean();
+           
            
            in.setIngredient_name(request.getParameter("ingredientName"));
            
@@ -75,9 +80,10 @@ public class AddIngredientServlet extends HttpServlet {
                 else isnotUnique = 0;
             }
             
-            if(isnotUnique == 1)
+            if(isnotUnique == 1){
+                isnotUnique = 0;
                 response.sendRedirect("ingredients.jsp#failCreate");
-            else{
+            }else{
                 ingredient.addIngredient(in);
                 response.sendRedirect("ingredients.jsp#successCreate");
             }

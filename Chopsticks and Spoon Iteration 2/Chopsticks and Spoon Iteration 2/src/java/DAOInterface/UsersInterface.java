@@ -16,9 +16,7 @@ import java.util.ArrayList;
 public interface UsersInterface {
     
     public boolean addUser(UsersBean ubean);
-    
-    public void deleteUser(UsersBean ubean);
-    
+  
     public boolean editUser(UsersBean ubean, int x);
     
     public boolean userLogin(String userid, String password);

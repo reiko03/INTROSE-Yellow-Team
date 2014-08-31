@@ -43,11 +43,9 @@ public class EditIngredientServlet extends HttpServlet {
             String name = request.getParameter("ingredientName");
             int threshold = Integer.parseInt(request.getParameter("ingredientThreshold"));
             
-            System.out.println("ingredient" +id);
-            System.out.println(name);
-            System.out.println(threshold);
+            
             in.editIngredient(id, name, threshold);
-          
+            in.checkSupply(id);
             response.sendRedirect("ingredients.jsp#successEdit");
         } finally {
             out.close();

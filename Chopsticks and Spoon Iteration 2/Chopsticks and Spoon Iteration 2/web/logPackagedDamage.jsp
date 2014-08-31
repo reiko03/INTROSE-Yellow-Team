@@ -1,3 +1,5 @@
+<%@page import="Bean.PackagedBean"%>
+<%@page import="Bean.IngredientBean"%>
 <%@page import="java.util.ArrayList"%>
 <%@page import="Bean.DamageLogBean"%>
 <%@page import="Bean.UsersBean"%>
@@ -26,10 +28,22 @@
 	    <span class="username"><%out.println(useraccount.getUser_name());%></span>
 		<span class="position"><%out.println(useraccount.getUser_level());%></span>
 	  </div>
+                <% ArrayList<IngredientBean> ilist = (ArrayList<IngredientBean>) session.getAttribute("ingredientlist");
+                    int ingredientNotif = 0;
+                    for(int i = 0; i < ilist.size(); i++){
+                        if(ilist.get(i).getIngredient_needSupply() == 1)
+                            ingredientNotif++;
+                    }%>
+                    <% ArrayList<PackagedBean> plist = (ArrayList<PackagedBean>) session.getAttribute("packagedlist");
+                    int packagedNotif = 0;
+                    for(int j = 0; j < plist.size(); j++){
+                        if(plist.get(j).getPackaged_needSupply() == 1)
+                            packagedNotif++;
+                    }%>
 	  <ul>
-	    <li class="nav_pos"><a href="pos.html" title="Point of Sales">Point of Sales</a></li>
-	    <li class="nav_ingredients"><a href="GetIngredientListServlet" title="Ingredients">Ingredients <span>2</span></a></li>
-	    <li class="nav_packaged"><a href="GetPackagedListServlet" title="Pacakaged Items">Packaged Items <span>1</span></a></li>
+	    <li class="nav_pos"><a href="pos.jsp" title="Point of Sales">Point of Sales</a></li>
+	    <li class="nav_ingredients"><a href="GetIngredientListServlet" title="Ingredients">Ingredients <span><%out.println(ingredientNotif);%></span></a></li>
+                        <li class="nav_packaged"><a href="GetPackagedListServlet" title="Pacakaged Items">Packaged Items <span><%out.println(packagedNotif);%></span></a></li>
       </ul>
     </div>
   </div>

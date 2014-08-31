@@ -59,7 +59,7 @@ public class ReportSpoiledIngredient extends HttpServlet {
             System.out.println(date);
             in.removeSpoiled(ingredientid, weight);
             in.addSpoilLog(userid, ingredientid, weight, date);
-          
+            in.checkSupply(ingredientid);
             response.sendRedirect("ingredients.jsp#successReport");
         } finally {
             out.close();

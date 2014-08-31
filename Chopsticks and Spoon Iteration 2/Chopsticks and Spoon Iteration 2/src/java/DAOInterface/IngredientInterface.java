@@ -38,4 +38,6 @@ public interface IngredientInterface {
     
     public ArrayList<IngredientBean> getIngredientList();
     
+    public void checkSupply(int id);
+    
 }

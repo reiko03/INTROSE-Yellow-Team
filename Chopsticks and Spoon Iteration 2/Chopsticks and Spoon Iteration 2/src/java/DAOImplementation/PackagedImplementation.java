@@ -102,6 +102,7 @@ public class PackagedImplementation implements PackagedInterface {
          packagedBean.setPackaged_cost(rs.getDouble(4));
          packagedBean.setPackaged_price(rs.getDouble(5));
          packagedBean.setPackaged_threshold(rs.getInt(6));
+         packagedBean.setPackaged_needSupply(rs.getInt(7));
          return packagedBean;
         }
         }catch(SQLException exc){
@@ -179,6 +180,7 @@ public class PackagedImplementation implements PackagedInterface {
                 temp.setPackaged_cost(resultSet.getDouble("packaged_cost"));
                 temp.setPackaged_price(resultSet.getDouble("packaged_price"));
                 temp.setPackaged_threshold(resultSet.getInt("packaged_threshold"));
+                temp.setPackaged_needSupply(resultSet.getInt("packaged_needSupply"));
                
                 packagedBean.add(temp);
             }
@@ -284,6 +286,48 @@ public class PackagedImplementation implements PackagedInterface {
             ps2.setDouble(1, resultQuantity);
             ps2.setDouble(2, resultCost);
             ps2.setInt(3, id);
+            ps2.executeUpdate();
+            
+        } catch (SQLException ex) {
+            Logger.getLogger(IngredientImplementation.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    @Override
+    public void checkSupply(int id) {
+         try {
+            Connector c = new Connector();
+            Connection connection = c.getConnection();
+            PackagedBean temp = new PackagedBean();
+            int quantity = 0;
+            int threshold = 0;
+            int needSupply = 0;
+            
+            //first get the specific packaged to make calculations
+            String queryGetPackaged = "SELECT packaged_quantity, packaged_threshold FROM packaged WHERE packaged_id =?"; 
+           
+            PreparedStatement ps1 = connection.prepareStatement(queryGetPackaged);
+            ps1.setInt(1, id);
+            ResultSet resultSet = ps1.executeQuery();
+            
+            while (resultSet.next()) {
+                quantity = resultSet.getInt("packaged_quantity");
+                threshold = resultSet.getInt("packaged_threshold");
+                
+            }
+            
+            //CALCULATION
+            if(quantity <= threshold)
+                needSupply = 1;
+            else
+                needSupply = 0;                      
+            
+            
+            //update the database
+            String query = "update packaged set packaged_needSupply = ? where packaged_id =?";
+            PreparedStatement ps2 = connection.prepareStatement(query);
+            ps2.setDouble(1, needSupply);
+            ps2.setInt(2, id);
             ps2.executeUpdate();
             
         } catch (SQLException ex) {

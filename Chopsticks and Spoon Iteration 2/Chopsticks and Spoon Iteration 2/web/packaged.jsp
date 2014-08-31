@@ -1,3 +1,4 @@
+<%@page import="Bean.IngredientBean"%>
 <%@page import="Bean.UsersBean"%>
 <%@page import="Bean.PackagedBean"%>
 <%@page import="java.util.ArrayList"%>
@@ -27,10 +28,22 @@
 	    <span class="username"><%out.println(useraccount.getUser_name());%></span>
 		<span class="position"><%out.println(useraccount.getUser_level());%></span>
 	  </div>
+                <% ArrayList<IngredientBean> ilist = (ArrayList<IngredientBean>) session.getAttribute("ingredientlist");
+                    int ingredientNotif = 0;
+                    for(int i = 0; i < ilist.size(); i++){
+                        if(ilist.get(i).getIngredient_needSupply() == 1)
+                            ingredientNotif++;
+                    }%>
+                    <% ArrayList<PackagedBean> plist = (ArrayList<PackagedBean>) session.getAttribute("packagedlist");
+                    int packagedNotif = 0;
+                    for(int j = 0; j < plist.size(); j++){
+                        if(plist.get(j).getPackaged_needSupply() == 1)
+                            packagedNotif++;
+                    }%>
 	  <ul>
 	    <li class="nav_pos"><a href="pos.jsp" title="Point of Sales">Point of Sales</a></li>
-	    <li class="nav_ingredients"><a href="GetIngredientListServlet" title="Ingredients">Ingredients <span>2</span></a></li>
-	    <li class="nav_packaged"><a href="GetPackagedListServlet" title="Pacakaged Items">Packaged Items <span>1</span></a></li>
+	    <li class="nav_ingredients"><a href="GetIngredientListServlet" title="Ingredients">Ingredients <span><%out.println(ingredientNotif);%></span></a></li>
+                        <li class="nav_packaged"><a href="GetPackagedListServlet" title="Pacakaged Items">Packaged Items <span><%out.println(packagedNotif);%></span></a></li>
       </ul>
     </div>
   </div>
@@ -65,7 +78,6 @@
 	  </form>
 	</div>-->
 	<div class="right">
-		<a class="button left" href="GetPackagedListServlet" title="Refresh">Refresh</a>
 	  <a class="button left" href="#reportDamaged" title="Report Damaged">Report Damaged</a>
 	  <a class="button left" href="#createPackaged" title="Create New Packaged Item">Create New Packaged Item</a>
 	</div>
@@ -82,8 +94,12 @@
 	  <% 
           ArrayList<PackagedBean> packlist = (ArrayList<PackagedBean>) session.getAttribute("packagedlist");
          
-              for(int i = 0; i < packlist.size(); i++){%>
-	  <tr>
+              for(int i = 0; i < packlist.size(); i++){
+            if(packlist.get(i).getPackaged_needSupply() == 1){%>
+                    <tr class="warning">
+                        <%}else{%>
+                        <tr>
+                        <%}%>
 	    <td><%out.println(packlist.get(i).getPackaged_name());%></td>
 	    <td><%out.println(packlist.get(i).getPackaged_quantity());%></td>
 	    <td><%out.println(packlist.get(i).getPackaged_cost());%></td>
@@ -157,25 +173,25 @@
   <!--MODALS START-->
   <div id="successReport" class="wrapModal">
 	   <div class="alert alert-warning alert-dismissible" role="alert">
-  <a class="right close button" href="#close" data-dismiss="alert" title="Close">X</a>
+  <a class="right close button" href="GetPackagedListServlet" data-dismiss="alert" title="Close">X</a>
   <strong><font color="green">Success!</font></strong> <font color="black">You have just successfully reported a damaged package!</font>
 </div>
 </div>
   <div id="successRestock" class="wrapModal">
 	   <div class="alert alert-warning alert-dismissible" role="alert">
-  <a class="right close button" href="#close" data-dismiss="alert" title="Close">X</a>
+  <a class="right close button" href="GetPackagedListServlet" data-dismiss="alert" title="Close">X</a>
   <strong><font color="green">Success!</font></strong> <font color="black">You have just successfully restocked a package!</font>
 </div>
 </div>
   <div id="successEdit" class="wrapModal">
 	   <div class="alert alert-warning alert-dismissible" role="alert">
-  <a class="right close button" href="#close" data-dismiss="alert" title="Close">X</a>
-  <strong><font color="green">Success!</font></strong> <font color="black">You have just successfully edited an ingredient!</font>
+  <a class="right close button" href="GetPackagedListServlet" data-dismiss="alert" title="Close">X</a>
+  <strong><font color="green">Success!</font></strong> <font color="black">You have just successfully edited an package!</font>
 </div>
 </div>
   <div id="successCreate" class="wrapModal">
 	   <div class="alert alert-warning alert-dismissible" role="alert">
-  <a class="right close button" href="#close" data-dismiss="alert" title="Close">X</a>
+  <a class="right close button" href="GetPackagedListServlet" data-dismiss="alert" title="Close">X</a>
   <strong><font color="green">Success!</font></strong> <font color="black">You have just successfully edited a package!</font>
 </div>
 </div>

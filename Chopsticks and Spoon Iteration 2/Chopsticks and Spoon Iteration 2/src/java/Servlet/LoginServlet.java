@@ -7,10 +7,13 @@
 package Servlet;
 
 import Bean.IngredientBean;
+import Bean.PackagedBean;
 import Bean.UsersBean;
 import DAOImplementation.IngredientImplementation;
+import DAOImplementation.PackagedImplementation;
 import DAOImplementation.UserImplementation;
 import DAOInterface.IngredientInterface;
+import DAOInterface.PackagedInterface;
 import DAOInterface.UsersInterface;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -45,14 +48,17 @@ public class LoginServlet extends HttpServlet {
         try {
             /* TODO output your page here. You may use following sample code. */
            IngredientInterface ingInterface = new IngredientImplementation();
+            PackagedInterface packInterface = new PackagedImplementation();
            UsersInterface account = new UserImplementation();
            HttpSession session = request.getSession();
            UsersBean user = new UsersBean();
           
            if(account.userLogin(request.getParameter("username"), request.getParameter("password")))
            {
-               ArrayList<IngredientBean> ib =  ingInterface.getIngredientList();
+            ArrayList<IngredientBean> ib =  ingInterface.getIngredientList();
             session.setAttribute("ingredientlist", ib);
+            ArrayList<PackagedBean> pb =  packInterface.getPackagedList();
+            session.setAttribute("packagedlist", pb);
             user = account.getUser(request.getParameter("username"));
             session.setAttribute("userAccount", user);
             session.setAttribute("userID", user.getUser_id());
