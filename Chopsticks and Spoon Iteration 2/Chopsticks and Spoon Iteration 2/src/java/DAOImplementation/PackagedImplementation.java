@@ -9,6 +9,7 @@ package DAOImplementation;
 import Bean.DamageLogBean;
 import Bean.PackagedBean;
 import Bean.PackagedRestockLogBean;
+import Bean.PackagedSaleLogBean;
 import Bean.UsersBean;
 import DAOInterface.PackagedInterface;
 import DBConnection.Connector;
@@ -169,6 +170,34 @@ public class PackagedImplementation implements PackagedInterface {
         return damagelogBean;
     }
 
+    @Override
+    public ArrayList<PackagedSaleLogBean> getPackagedLogList(){
+        Connector connector = new Connector();
+        Connection connection = connector.getConnection();
+        ArrayList<PackagedSaleLogBean> packagedLogList = new ArrayList();
+        PackagedSaleLogBean packagedLogBean;
+        String query = "SELECT * FROM packagedsalelog";
+        try{
+        PreparedStatement ps = connection.prepareStatement(query);
+        ResultSet rs = ps.executeQuery();
+        while(rs.next()){
+        packagedLogBean = new PackagedSaleLogBean();
+        packagedLogBean.setP_sale_id(rs.getInt(1));
+        packagedLogBean.setP_sale_userid(rs.getInt(2));
+        packagedLogBean.setP_sale_packagedid(rs.getInt(3));
+        packagedLogBean.setSale_cost(rs.getDouble(4));
+        packagedLogBean.setSale_price(rs.getDouble(5));
+        packagedLogBean.setSale_datetime(rs.getString(6));
+        packagedLogList.add(packagedLogBean);
+        }
+        return packagedLogList;
+            
+            
+            
+        }catch(SQLException exc){}
+        return packagedLogList;
+    }
+    
     @Override
     public ArrayList<PackagedBean> getPackagedList() {
         Connector connector = new Connector();
@@ -341,6 +370,53 @@ public class PackagedImplementation implements PackagedInterface {
         }
     }
     
-    
+     @Override
+    public boolean sellPackaged(PackagedBean pbean, UsersBean userAccount){
+        Connector c = new Connector();
+        Connection connection = c.getConnection();
+        int needSupply = 0;
+        
+        String query1 = "SELECT packaged_quantity, packaged_threshold FROM packaged where packaged_id=?";
+        String query = "UPDATE packaged set packaged_quantity=?, packaged_needSupply=? where packaged_id=?";
+        try{
+        PreparedStatement ps = connection.prepareStatement(query1);
+        ps.setInt(1, pbean.getPackaged_id());
+        ResultSet rs = ps.executeQuery();
+        rs.next();
+        int currentQuantity = rs.getInt(1);
+        int currentThreshold = rs.getInt(2);
+        ps.close();
+        rs.close();
+        
+        if((currentQuantity-1) <= currentThreshold)
+            needSupply = 1;
+        else needSupply = 0;
+        
+        ps = connection.prepareStatement(query);
+        ps.setInt(1, currentQuantity - 1);
+        ps.setInt(2, needSupply);
+        ps.setInt(3, pbean.getPackaged_id());
+        ps.executeUpdate();
+        ps.close();
+        
+        
+         query = "INSERT INTO packagedsalelog (p_sale_id, p_sale_userid, p_sale_packagedid,sale_cost, sale_price, sale_datetime, sale_order) VALUES(NULL,?,?,?,?,CURRENT_TIMESTAMP,null)";
+         ps = connection.prepareStatement(query);
+         ps.setInt(1, userAccount.getUser_id());
+         ps.setInt(2, pbean.getPackaged_id());
+         ps.setDouble(3, pbean.getPackaged_cost());
+         ps.setDouble(4, pbean.getPackaged_price());
+         
+         ps.executeUpdate();
+         
+            
+            return true;
+        }catch(SQLException exc){
+            
+        }
+        
+        
+        return false;
+    }
     
 }

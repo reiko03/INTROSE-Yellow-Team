@@ -14,8 +14,6 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  *
@@ -70,6 +68,11 @@ public class UserImplementation implements UsersInterface {
         return false;
     }
         
+    @Override
+    public void deleteUser(UsersBean ubean) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+    
    
     @Override
     public boolean editUser(UsersBean ubean, int x){
@@ -103,6 +106,28 @@ public class UserImplementation implements UsersInterface {
         try{
         PreparedStatement ps = connection.prepareStatement(query);
         ps.setString(1, username);
+        ResultSet rs = ps.executeQuery();
+        rs.next();
+        userBean.setUser_id(rs.getInt(1));
+        userBean.setUser_name(rs.getString(2));
+        userBean.setUser_password(rs.getString(3));
+        userBean.setUser_level(rs.getString(4));
+        }catch(SQLException exc){
+        }
+        
+        return userBean;
+       
+    }
+    
+    @Override
+    public UsersBean getUser(int user_id) {
+        UsersBean userBean= new UsersBean();
+         Connector c = new Connector();
+        Connection connection = c.getConnection();
+        String query = "SELECT * FROM users WHERE user_id= ?";
+        try{
+        PreparedStatement ps = connection.prepareStatement(query);
+        ps.setInt(1, user_id);
         ResultSet rs = ps.executeQuery();
         rs.next();
         userBean.setUser_id(rs.getInt(1));

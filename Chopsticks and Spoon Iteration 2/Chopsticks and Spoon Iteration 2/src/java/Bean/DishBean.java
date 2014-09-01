@@ -18,6 +18,7 @@ public class DishBean {
     private double dish_cost;
     private double dish_price;
     private ArrayList<IngredientBean> ingredientList;
+    private int dish_highCost;
 
     
     public void setIngredientList(ArrayList<IngredientBean> ingredientList) {
@@ -59,6 +60,14 @@ public class DishBean {
 
     public void setDish_price(double dish_price) {
         this.dish_price = dish_price;
+    }
+
+    public int getDish_highCost() {
+        return dish_highCost;
+    }
+
+    public void setDish_highCost(int dish_highCost) {
+        this.dish_highCost = dish_highCost;
     }
     
     

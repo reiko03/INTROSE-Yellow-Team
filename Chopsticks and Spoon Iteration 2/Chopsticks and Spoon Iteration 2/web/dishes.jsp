@@ -48,6 +48,13 @@
                         if(plist.get(j).getPackaged_needSupply() == 1)
                             packagedNotif++;
                     }%>
+                    <% ArrayList<DishBean> dlist = (ArrayList<DishBean>) session.getAttribute("dishlist");
+                       int dishNotif = 0;
+                    for(int k = 0; k < dlist.size(); k++){System.out.println(dlist.get(k).getDish_highCost());
+                        if(dlist.get(k).getDish_highCost() == 1)
+                            dishNotif++;
+                    }%>
+                    
                     <ul>
                         <li class="nav_pos"><a href="pos.jsp" title="Point of Sales">Point of Sales</a></li>
                         <li class="nav_ingredients"><a href="GetIngredientListServlet" title="Ingredients">Ingredients <span><%out.println(ingredientNotif);%></span></a></li>
@@ -65,7 +72,7 @@
                     </hgroup>
                     <div class="subMenu">
                         <ul>
-                            <li><a href="dishes.jsp" title="Manage Dishes">Dishes <span>1</span></a></li>
+                           <li><a href="dishes.jsp" title="Manage Dishes">Dishes <span><%out.println(dishNotif);%></span></a></li>
                             <li><%if(useraccount.getUser_level().equals("user")){
                             %><div style="display: none">
                                 <%}else{%><div style="display: inline"><a href="users.jsp" title="Manage Users">Users</a></div><%}%></li>
@@ -82,10 +89,7 @@
             <section class="wrapContent">
                 <h1>Dishes</h1>
                 <div class="left">
-                    <form id="searchDish" class="search">
-                        <input type="search" name="search" placeholder="Search..">
-                        <input type="submit" value="Search">
-                    </form>
+                    
                 </div>
                 <div class="right">
                     <a class="button left" href="#createDish" title="Create New Dish">Create New Dish</a>
@@ -109,7 +113,7 @@
                     <%  DishInterface dishDAO = new DishImplementation();
                         ArrayList<DishBean> dishList = dishDAO.getDishList();
                         for(int i = 0; i< dishList.size();i++){
-                        if(dishList.get(i).getDish_cost() > dishList.get(i).getDish_price()){
+                        if(dishList.get(i).getDish_highCost() == 1){
                             %>
                             <tr class="warning">
                         <%}else{%>

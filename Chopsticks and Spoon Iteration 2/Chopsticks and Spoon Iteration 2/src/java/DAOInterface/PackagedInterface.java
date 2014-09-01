@@ -9,6 +9,7 @@ package DAOInterface;
 import Bean.DamageLogBean;
 import Bean.PackagedBean;
 import Bean.PackagedRestockLogBean;
+import Bean.PackagedSaleLogBean;
 import Bean.UsersBean;
 import java.util.ArrayList;
 
@@ -40,4 +41,7 @@ public interface PackagedInterface {
     
     public void checkSupply(int id);
     
+    public boolean sellPackaged(PackagedBean pbean, UsersBean userAccount);
+    
+    public ArrayList<PackagedSaleLogBean> getPackagedLogList();
 }

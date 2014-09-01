@@ -6,12 +6,15 @@
 
 package Servlet;
 
+import Bean.DishBean;
 import Bean.IngredientBean;
 import Bean.PackagedBean;
 import Bean.UsersBean;
+import DAOImplementation.DishImplementation;
 import DAOImplementation.IngredientImplementation;
 import DAOImplementation.PackagedImplementation;
 import DAOImplementation.UserImplementation;
+import DAOInterface.DishInterface;
 import DAOInterface.IngredientInterface;
 import DAOInterface.PackagedInterface;
 import DAOInterface.UsersInterface;
@@ -49,6 +52,7 @@ public class LoginServlet extends HttpServlet {
             /* TODO output your page here. You may use following sample code. */
            IngredientInterface ingInterface = new IngredientImplementation();
             PackagedInterface packInterface = new PackagedImplementation();
+            DishInterface dishInterface = new DishImplementation();
            UsersInterface account = new UserImplementation();
            HttpSession session = request.getSession();
            UsersBean user = new UsersBean();
@@ -59,6 +63,8 @@ public class LoginServlet extends HttpServlet {
             session.setAttribute("ingredientlist", ib);
             ArrayList<PackagedBean> pb =  packInterface.getPackagedList();
             session.setAttribute("packagedlist", pb);
+            ArrayList<DishBean> db =  dishInterface.getDishList();
+            session.setAttribute("dishlist", db);
             user = account.getUser(request.getParameter("username"));
             session.setAttribute("userAccount", user);
             session.setAttribute("userID", user.getUser_id());

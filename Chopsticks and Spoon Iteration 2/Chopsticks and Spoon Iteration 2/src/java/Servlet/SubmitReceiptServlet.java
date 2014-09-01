@@ -7,14 +7,16 @@
 package Servlet;
 
 import Bean.DishBean;
-import Bean.IngredientBean;
+import Bean.PackagedBean;
+import Bean.UsersBean;
 import DAOImplementation.DishImplementation;
-import DAOImplementation.IngredientImplementation;
+import DAOImplementation.PackagedImplementation;
+import DAOImplementation.UserImplementation;
 import DAOInterface.DishInterface;
-import DAOInterface.IngredientInterface;
+import DAOInterface.PackagedInterface;
+import DAOInterface.UsersInterface;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.ArrayList;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -23,10 +25,10 @@ import javax.servlet.http.HttpServletResponse;
 
 /**
  *
- * @author Drian
+ * @author JasonTan
  */
-@WebServlet(name = "AddDishServlet", urlPatterns = {"/AddDishServlet"})
-public class AddDishServlet extends HttpServlet {
+@WebServlet(name = "SubmitReceiptServlet", urlPatterns = {"/SubmitReceiptServlet"})
+public class SubmitReceiptServlet extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -43,41 +45,47 @@ public class AddDishServlet extends HttpServlet {
         PrintWriter out = response.getWriter();
         try {
             /* TODO output your page here. You may use following sample code. */
-           DishBean dishBean = new DishBean();
-           DishInterface dishDAO = new DishImplementation();
-           IngredientInterface ingDAO = new IngredientImplementation();
-           IngredientBean ingBean;
-           ArrayList<IngredientBean> ingredientList = new ArrayList();
-           String dishName = request.getParameter("dishName");
-           String dishPrice = request.getParameter("dishPrice");
-              String x = request.getParameter("ingredientNumbers");
-            String[] ingredientNumbers = x.split(",");
-            String a = request.getParameter("totalWeight");
-            String[] ingredientWeight = a.split(",");
-          String totalDishPrice = request.getParameter("recipeTotal");
-          dishBean.setDish_name(dishName);
-          dishBean.setDish_cost(Double.parseDouble(totalDishPrice));
-          dishBean.setDish_price(Double.parseDouble(dishPrice));
-        
-          
-          for(int i = 0; i < ingredientNumbers.length; i++){
-           ingBean = new IngredientBean();
-           System.out.println("Ingredient Numbers:" + ingredientNumbers[i]);
-           ingBean = ingDAO.getIngredient(Integer.parseInt(ingredientNumbers[i]));
-           ingredientList.add(ingBean);
-           System.out.println("Ingredient Name:" + ingredientList.get(i).getIngredient_name());
-           System.out.println("Ingredient Weight:" + Double.parseDouble(ingredientWeight[i]));
-           ingredientList.get(i).setIngredient_weight(Double.parseDouble(ingredientWeight[i])); 
-          }
-          dishBean.setIngredientList(ingredientList);
-          
-          if(dishDAO.checkDish(dishName)){
-          dishDAO.addDish(dishBean);
-          response.sendRedirect("dishes.jsp#successCreate");
-          }
-          else{
-          response.sendRedirect("dishes.jsp#failCreate");
-          }
+            DishInterface dishDAO = new DishImplementation();
+            DishBean dbean = new DishBean();
+            PackagedInterface packDAO = new PackagedImplementation();
+            PackagedBean pbean = new PackagedBean();
+            String receiptTotals = request.getParameter("receiptTotals");
+            String payment = request.getParameter("payment");
+            String receiptChange = request.getParameter("receiptChange");
+            String x = request.getParameter("packagedArray");
+            String a = request.getParameter("dishArray");
+            String[] packagedArray = x.split(",");
+            String[] dishArray = a.split(",");
+            UsersBean userAccount = new UsersBean();
+            UsersInterface userDAO = new UserImplementation();
+            String username = request.getParameter("username");
+            
+            boolean pass = false;
+             if(!dishArray[0].isEmpty()){
+            for(int i = 0; i < dishArray.length;i++){
+             dbean = dishDAO.getDish(Integer.parseInt(dishArray[i]));
+             System.out.println("Name:"+dbean.getDish_name());
+             System.out.println("cost:"+dbean.getDish_cost());
+             System.out.println("price:"+dbean.getDish_price());
+             System.out.println("id:"+dbean.getDish_id());
+            
+             if(dishDAO.sellDish(dbean, userDAO.getUser(username)))
+               pass=true;
+            }
+             }
+            if(!packagedArray[0].isEmpty()){
+            for(int i = 0; i < packagedArray.length;i++){
+               pbean = packDAO.getPackaged(Integer.parseInt(packagedArray[i]));
+               
+               if(packDAO.sellPackaged(pbean, userDAO.getUser(username)))
+                   pass=true;
+                
+            }
+            }
+            if(pass)
+                 response.sendRedirect("pos.jsp#successCreate");
+            else
+                response.sendRedirect("pos.jsp#failCreate");
         } finally {
             out.close();
         }

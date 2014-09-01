@@ -1,3 +1,9 @@
+<%@page import="DAOImplementation.UserImplementation"%>
+<%@page import="DAOInterface.UsersInterface"%>
+<%@page import="Bean.PackagedSaleLogBean"%>
+<%@page import="java.util.ArrayList"%>
+<%@page import="DAOImplementation.PackagedImplementation"%>
+<%@page import="DAOInterface.PackagedInterface"%>
 <!DOCTYPE html>
 <!--[if lt IE 7 ]><html class="ie ie6" lang="en"> <![endif]-->
 <!--[if IE 7 ]><html class="ie ie7" lang="en"> <![endif]-->
@@ -23,8 +29,8 @@
 	  </div>
 	  <ul>
 	    <li class="nav_pos"><a href="pos.jsp" title="Point of Sales">Point of Sales</a></li>
-	    <li class="nav_ingredients"><a href="GetIngredientListServlet" title="Ingredients">Ingredients <span>2</span></a></li>
-	    <li class="nav_packaged"><a href="GetPackagedListServlet" title="Pacakaged Items">Packaged Items <span>1</span></a></li>
+	    <li class="nav_ingredients"><a href="ingredients.jsp" title="Ingredients">Ingredients <span>2</span></a></li>
+	    <li class="nav_packaged"><a href="packaged.jsp" title="Pacakaged Items">Packaged Items <span>1</span></a></li>
       </ul>
     </div>
   </div>
@@ -40,8 +46,8 @@
 	    <ul>
 	      <li><a href="dishes.jsp" title="Manage Dishes">Dishes <span>1</span></a></li>
 		  <li><a href="users.jsp" title="Manage Users">Users</a></li>
-		  <li><a href="GetIngredientRestockLogListServlet" title="View  Logs">View  Logs</a></li>
-		  <li><a href="index.jsp" title="Log Out">Log Out</a></li>
+		  <li><a href="logIngredientRestock.jsp" title="View  Logs">View  Logs</a></li>
+		  <li><a href="" title="Log Out">Log Out</a></li>
 		  <li id="dateTime">DATE / TIME</li>
 	    </ul>
       </div>
@@ -54,15 +60,20 @@
     <h1>Packaged Sales Log Report</h1>
 	<div class="logNav">
 	  <ul>
-	    <li class="logNav_ingredientRestock"><a href="GetIngredientRestockLogListServlet" title="Ingredient Restock Log">Ingredient Restock</a></li>
-	    <li class="logNav_ingredientSpoil"><a href="GetIngredientSpoilLogListServlet" title="Ingredient Spoil Log">Ingredient Spoil</a></li>
-	    <li class="logNav_packagedRestock"><a href="GetPackagedRestockLogListServlet" title="Packaged Restock Log">Packaged Restock</a></li>
-	    <li class="logNav_packagedDamage"><a href="GetPackagedDamagedLogListServlet" title="Packaged Damage Log">Packaged Damage</a></li>
+	    <li class="logNav_ingredientRestock"><a href="logIngredientRestock.jsp" title="Ingredient Restock Log">Ingredient Restock</a></li>
+	    <li class="logNav_ingredientSpoil"><a href="logIngredientSpoil.jsp" title="Ingredient Spoil Log">Ingredient Spoil</a></li>
+	    <li class="logNav_packagedRestock"><a href="logPackagedRestock.jsp" title="Packaged Restock Log">Packaged Restock</a></li>
+	    <li class="logNav_packagedDamage"><a href="logPackagedDamage.jsp" title="Packaged Damage Log">Packaged Damage</a></li>
 	    <li class="logNav_dishSale"><a href="logDishSale.jsp" title="Dish Sale Log">Dish Sale</a></li>
 	    <li class="logNav_packagedSale"><a href="logPackagedSale.jsp" title="Packaged Sale Log">Packaged Sale</a></li>
 	  </ul>
 	</div>
 	<table>
+            <% PackagedInterface packDAO = new PackagedImplementation();
+            UsersInterface userDAO = new UserImplementation();
+            ArrayList<PackagedSaleLogBean> packagedLogList = packDAO.getPackagedLogList();
+            
+            %>
 	  <tr>
 	    <th>User</th>
 	    <th>Order No.</th>
@@ -71,30 +82,16 @@
 	    <th>Price</th>
 	    <th>Date &amp; Time</th>
 	  </tr>
-	  <tr>
-	    <td>Sales</td>
-	    <td>2</td>
-	    <td>C2 Green 500ml</td>
-	    <td>16.00</td>
-	    <td>20.00</td>
-	    <td>7/28/2014 3:00 PM</td>
+          <% for(int i = 0 ; i < packagedLogList.size();i++){%>
+	  <tr><td><%=userDAO.getUser(packagedLogList.get(i).getP_sale_userid()).getUser_name()%></td>
+              <td><%=packagedLogList.get(i).getP_sale_packagedid()%></td>
+              <td><%=packDAO.getPackaged(packagedLogList.get(i).getP_sale_packagedid()).getPackaged_name()%></td>
+              <td><%=packagedLogList.get(i).getSale_cost()%></td>
+	    <td><%=packagedLogList.get(i).getSale_price()%></td>
+	    <td><%=packagedLogList.get(i).getSale_datetime()%></td>
 	  </tr>
-	  <tr>
-	    <td>Sales</td>
-	    <td>2</td>
-	    <td>C2 Green 500ml</td>
-	    <td>16.00</td>
-	    <td>20.00</td>
-	    <td>7/28/2014 3:00 PM</td>
-	  </tr>
-	  <tr>
-	    <td>Sales</td>
-	    <td>4</td>
-	    <td>C2 Red 500ml</td>
-	    <td>16.00</td>
-	    <td>20.00</td>
-	    <td>7/28/2014 4:31 PM</td>
-	  </tr>
+              <%}%>
+	    
 	</table>
   </section>
   <!--CONTENT END-->

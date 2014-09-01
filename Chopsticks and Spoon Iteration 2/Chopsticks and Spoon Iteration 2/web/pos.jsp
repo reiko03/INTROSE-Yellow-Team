@@ -1,7 +1,12 @@
+<%@page import="Bean.DishBean"%>
+<%@page import="Bean.UsersBean"%>
 <%@page import="Bean.IngredientBean"%>
 <%@page import="Bean.PackagedBean"%>
 <%@page import="java.util.ArrayList"%>
-<%@page import="Bean.UsersBean"%>
+<%@page import="DAOImplementation.PackagedImplementation"%>
+<%@page import="DAOInterface.PackagedInterface"%>
+<%@page import="DAOImplementation.DishImplementation"%>
+<%@page import="DAOInterface.DishInterface"%>
 <!DOCTYPE html>
 <!--[if lt IE 7 ]><html class="ie ie6" lang="en"> <![endif]-->
 <!--[if IE 7 ]><html class="ie ie7" lang="en"> <![endif]-->
@@ -14,6 +19,7 @@
   <meta name="author" content="">  
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"> 
   <link rel="stylesheet" href="css/style.css">
+  <script src="bootstrap/js/jquery.min.js"></script>
   <link rel="icon" href="images/favicon.ico">
 </head>
 <body id="body_pos">
@@ -39,6 +45,12 @@
                         if(plist.get(j).getPackaged_needSupply() == 1)
                             packagedNotif++;
                     }%>
+                    <% ArrayList<DishBean> dlist = (ArrayList<DishBean>) session.getAttribute("dishlist");
+                       int dishNotif = 0;
+                    for(int k = 0; k < dlist.size(); k++){System.out.println(dlist.get(k).getDish_highCost());
+                        if(dlist.get(k).getDish_highCost() == 1)
+                            dishNotif++;
+                    }%>
 	  <ul>
 	    <li class="nav_pos"><a href="pos.jsp" title="Point of Sales">Point of Sales</a></li>
 	    <li class="nav_ingredients"><a href="GetIngredientListServlet" title="Ingredients">Ingredients <span><%out.println(ingredientNotif);%></span></a></li>
@@ -56,13 +68,13 @@
 	  </hgroup>
       <div class="subMenu">
 	    <ul>
-	      <li><a href="dishes.jsp" title="Manage Dishes">Dishes <span>1</span></a></li>
+	      <li><a href="dishes.jsp" title="Manage Dishes">Dishes <span><%out.println(dishNotif);%></span></a></li>
 		  <li><%if(useraccount.getUser_level().equals("user")){
                             %><div style="display: none">
                                 <%}else{%><div style="display: inline"><a href="users.jsp" title="Manage Users">Users</a></div><%}%></li>
 		  <li><a href="GetIngredientRestockLogListServlet" title="View Logs">View Logs</a></li>
 		  <li><a href="index.jsp" title="Log Out">Log Out</a></li>
-		  <li id="dateTime">DATE / TIME</li>
+		  <li id="dateTime"><%= new java.util.Date() %></li>
 	    </ul>
       </div>
     <br class="clear">
@@ -75,81 +87,126 @@
     <div class="wrapReceipt">
       <div id="receipt">
         <h3>Receipt</h3>
-  	  <table>
+  	  <table id="receiptTable">
 	    <tr>
 	      <th>Item</th>
 	      <th>Price</th>
 	      <th>Remove</th>
  	    </tr>
-	    <tr>
-	      <td>Pancit Bihon</td>
-	      <td>230</td>
-	      <td class="tableButton"><a href="" title="Remove">- Remove</a></td>
-	    </tr>
-	    <tr>
-	      <td>Teriyaki Beef</td>
-	      <td>160</td>
-	      <td class="tableButton"><a href="" title="Remove">- Remove</a></td>
-	    </tr>
-	    <tr>
-	      <td>C2 Red 500ml</td>
-	      <td>20</td>
-	      <td class="tableButton"><a href="" title="Remove">- Remove</a></td>
-	    </tr>
-	    <tr>
-	      <td>C2 Red 500ml</td>
-	      <td>20</td>
-	      <td class="tableButton"><a href="" title="Remove">- Remove</a></td>
-	    </tr>
+	    
       </table>
-	  <form>
+         
+	  <form method="POST" action="SubmitReceiptServlet">
   	    <ul>
-	      <li>Total: <span id="receiptTotal">430.00</span></li>
-          <li>Payment: <input required type="text" name="payment"></li>
-          <li>Change: <span id="receiptTotal">0.00</span></li>
+	      <li>Total: <input type="text" id="receiptTotals" name="receiptTotals" value="0.00" readonly></li>
+          <li>Payment: <input required type="text" name="payment" value="0.00" onchange="generateChange(this.value)"></li>
+          <li>Change: <input readonly type="text" name="receiptChange" value="0.00" id="receiptChange"></li>
 	    </ul>
+              <input type="hidden" id="username" name="username" value="<%=useraccount.getUser_name()%>">
+              <input type="hidden" id="packagedArray" name="packagedArray">
+              <input type="hidden" id="dishArray" name="dishArray">
 	    <input type="submit" value="Submit">
       </form>
 	  </div>
     </div>
     <br class="clear">
-	<form id="searchDish" class="search">
-	    <input type="search" name="search" placeholder="Search..">
-		<input type="submit" value="Search">
-	</form>	  
+		  
     <div class="wrapDishMenu">
       <h3>Menu</h3>
       <ul>
-        <li><a href="" title="Pancit Bihon">Pancit Bihon <span>230.00</span></a></li>
-        <li><a href="" title="Teriyaki Beef">Teriyaki Beef <span>160.00</span></a></li>
-        <li><a href="" title="Steamed Dory">Steamed Dory <span>95.00</span></a></li>
-        <li><a href="" title="C2 Green 500ml">C2 Green 500ml <span>20.00</span></a></li>
-        <li><a href="" title="Mogu Mogu 500ml">Mogu Mogu 500ml <span>25.00</span></a></li>
-        <li><a href="" title="C2 Red 1L">C2 Red 1L <span>70.00</span></a></li>
-        <li><a href="" title="C2 Red 500ml">C2 Red 500ml <span>20.00</span></a></li>
-        <li><a href="" title="C2 Red 500ml">C2 Red 500ml <span>20.00</span></a></li>
-        <li><a href="" title="C2 Red 500ml">C2 Red 500ml <span>20.00</span></a></li>
-        <li><a href="" title="C2 Red 500ml">C2 Red 500ml <span>20.00</span></a></li>
-        <li><a href="" title="C2 Red 500ml">C2 Red 500ml <span>20.00</span></a></li>
-        <li><a href="" title="C2 Red 500ml">C2 Red 500ml <span>20.00</span></a></li>
-        <li><a href="" title="C2 Red 500ml">C2 Red 500ml <span>20.00</span></a></li>
-        <li><a href="" title="C2 Red 500ml">C2 Red 500ml <span>20.00</span></a></li>
-        <li><a href="" title="C2 Red 500ml">C2 Red 500ml <span>20.00</span></a></li>
-        <li><a href="" title="C2 Red 500ml">C2 Red 500ml <span>20.00</span></a></li>
-        <li><a href="" title="C2 Red 500ml">C2 Red 500ml <span>20.00</span></a></li>
-        <li><a href="" title="C2 Red 500ml">C2 Red 500ml <span>20.00</span></a></li>
-        <li><a href="" title="C2 Red 500ml">C2 Red 500ml <span>20.00</span></a></li>
-        <li><a href="" title="C2 Red 500ml">C2 Red 500ml <span>20.00</span></a></li>
-        <li><a href="" title="C2 Red 500ml">C2 Red 500ml <span>20.00</span></a></li>
-        <li><a href="" title="C2 Red 500ml">C2 Red 500ml <span>20.00</span></a></li>
-        <li><a href="" title="C2 Red 500ml">C2 Red 500ml <span>20.00</span></a></li>
-        <li><a href="" title="C2 Red 500ml">C2 Red 500ml <span>20.00</span></a></li>
-        <li><a href="" title="C2 Red 500ml">C2 Red 500ml <span>20.00</span></a></li>
+        <% DishInterface dishDAO = new DishImplementation();
+        PackagedInterface packDAO = new PackagedImplementation();
+        
+        for(int i = 0; i < dishDAO.getDishList().size();i++){
+        %>
+        <li><a href="#" onclick="addToReceipt('dish', '<%=dishDAO.getDishList().get(i).getDish_name()%>','<%=dishDAO.getDishList().get(i).getDish_price()%>','<%=dishDAO.getDishList().get(i).getDish_id()%>')">
+                <%=dishDAO.getDishList().get(i).getDish_name()%>
+                <span><%=dishDAO.getDishList().get(i).getDish_price()%></span>
+        </a></li>
+        <%}%>
+        <% for(int i = 0; i < packDAO.getPackagedList().size();i++){%>   
+        <li><a href="#" onclick="addToReceipt('packaged', '<%=packDAO.getPackagedList().get(i).getPackaged_name()%>','<%=packDAO.getPackagedList().get(i).getPackaged_price()%>','<%=packDAO.getPackagedList().get(i).getPackaged_id()%>')" ><%=packDAO.getPackagedList().get(i).getPackaged_name()%><span><%=packDAO.getPackagedList().get(i).getPackaged_price()%></span></a></li>
+        <%}%>
 
       </ul>
     </div>
   </section>
   <!--CONTENT END-->
   </div>
+        <div id="successCreate" class="wrapModal">
+	   <div class="alert alert-warning alert-dismissible" role="alert">
+  <a class="right close button" href="pos.jsp" data-dismiss="alert" title="Close">X</a>
+  <strong><font color="green">Success!</font></strong> <font color="black">You have just successfully submitted a receipt!</font>
+</div>
+</div>
+        <div id="failCreate" class="wrapModal">
+	   <div class="alert alert-warning alert-dismissible" role="alert">
+  <a class="right close button" href="pos.jsp" data-dismiss="alert" title="Close">X</a>
+  <strong><font color="red">Unsuccessful!</font></strong> <font color="black">You were unable to submit a receipt!</font>
+</div>
+</div>
+        <script>
+            var totalPrice = 0;
+            var dishArray = new Array();
+            var packArray = new Array();
+            function addToReceipt(type,name,price,id){
+                if(type === 'dish'){
+                   dishArray.push(id);
+                    $('#receiptTable').append('<tr id="deleteD'+id+'"><td>'+ name +'</td>' 
+						 +'<td>'+price+'</td>'+
+						 '<td><a href="#" onclick="deleteRow('+id+',\'dish\','+price+')">- Remove</a></td></tr>');
+                   
+                   
+        }
+               else{
+                   packArray.push(id);
+                    $('#receiptTable').append('<tr id="pDelete'+id+'"><td>'+ name +'</td>' 
+						 +'<td>'+price+'</td>'+
+						 '<td><a href="#" onclick="deleteRow('+id+',\'packaged\','+price+')">- Remove</a></td></tr>');
+                   
+                
+                
+        }
+               
+               totalPrice += parseFloat(price);
+               receiptTotals.value = totalPrice;
+               
+               
+             
+            }
+            
+            function generateChange(payment){
+                if(payment > totalPrice){
+                    var change = payment - totalPrice;
+                    receiptChange.value = change;
+                     $('#dishArray').val(dishArray.join(","));
+                      $('#packagedArray').val(packArray.join(","));
+                    }
+                else
+                    receiptChange.value = "Not Enough Payment";
+            }
+            
+            function deleteRow(id,type, price){
+
+                
+                if(type.toString() === 'dish'){
+                    
+                dishArray.pop(id);
+                var row = document.getElementById("deleteD"+id);
+                row.parentNode.removeChild(row);
+        }
+                else{
+                packArray.pop(id);
+                var row = document.getElementById("pDelete"+id);
+                row.parentNode.removeChild(row);
+                 
+            }
+                  totalPrice -= parseFloat(price);
+               receiptTotals.value = totalPrice;
+               
+                
+               
+            }
+        </script>
 </body>
 </html>
